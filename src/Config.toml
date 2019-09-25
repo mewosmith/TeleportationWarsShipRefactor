@@ -1,0 +1,12 @@
+[config]
+varbool = true
+variant_name = "_pasta"
+xl_dir_path = "D:/x4_extract_2.6/assets/units/size_xl/macros"
+l_dir_path = "D:/x4_extract_2.6/assets/units/size_l/macros"
+m_dir_path = "D:/x4_extract_2.6/assets/units/size_m/macros"
+s_dir_path = "D:/x4_extract_2.6/assets/units/size_s/macros"
+ware_path = "D:/x4_extract_2.6/libraries/wares.xml"
+t_path = ""
+out_path ="C:/Users/alby/Desktop/tpwar_targets/tpwar_ship_target/"
+
+[xlconfig]
