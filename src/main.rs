@@ -108,6 +108,8 @@ fn main() {
     let toml_str = include_str!("Config.toml");
     let toml_parsed: Toml = toml::from_str(&toml_str).unwrap();
     let variant = &toml_parsed.config.varbool;
+    let t_path = &toml_parsed.config.t_path;
+    let unwrapped_tfile = fs::read_to_string(t_path).unwrap();
 
     for entry in fs::read_dir(&toml_parsed.config.xl_dir_path).unwrap() {
         let entry = entry.unwrap();
@@ -116,6 +118,34 @@ fn main() {
             let mut macro_string = fs::read_to_string(&path).unwrap();
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
+
+            // let pattern = macro_parsed.r#macro.properties.identification.name;
+            // if pattern != "" {
+            //     let name_tfile_value = get_tfile_value(pattern, &unwrapped_tfile);
+            //     println!("{:?}", name_tfile_value)
+            // }
+            // let pattern = macro_parsed.r#macro.properties.identification.basename;
+            // if pattern != "" {
+            //     let basename_tfile_value = get_tfile_value(pattern, &unwrapped_tfile);
+                
+            //     println!("{:?}", basename_tfile_value)
+            // }
+            // let pattern = macro_parsed.r#macro.properties.identification.description;
+            // if pattern != "" {
+            //     let description_tfile_value = get_tfile_value(pattern, &unwrapped_tfile);
+            //     println!("{:?}", description_tfile_value)
+            // }
+            // let pattern = macro_parsed.r#macro.properties.identification.variation;
+            // if pattern != "" {
+            //     let variation_tfile_value = get_tfile_value(pattern, &unwrapped_tfile);
+            //     println!("{:?}", variation_tfile_value)
+            // }
+            // let pattern = macro_parsed.r#macro.properties.identification.shortvariation;
+            // if pattern != "" {
+            //     let shortvariation_tfile_value = get_tfile_value(pattern, &unwrapped_tfile);
+            //     println!("{:?}", shortvariation_tfile_value)
+            // }
+
             let ware_string = fs::read_to_string(&toml_parsed.config.ware_path).unwrap();
             for ware in ware_string.split_terminator("</ware>") {
                 if ware.contains(&macroname.replace(".xml", "")) {
@@ -159,18 +189,18 @@ fn main() {
                     }
                 }
             }
-            let macro_string = replace_pattern(
-                macro_parsed.r#macro.properties.identification.description,
-                macro_string,
-                "pasta",
-            );
+            // let macro_string = replace_pattern(
+            //     macro_parsed.r#macro.properties.identification.description,
+            //     macro_string,
+            //     "pasta",
+            // );
 
-            output(
-                &toml_parsed.config.out_path,
-                &path,
-                &toml_parsed.config.variant_name,
-                &ware_file_string,
-            );
+            // output(
+            //     &toml_parsed.config.out_path,
+            //     &path,
+            //     &toml_parsed.config.variant_name,
+            //     &ware_file_string,
+            // );
             // output(
             //     &toml_parsed.config.out_path,
             //     &path,
@@ -207,6 +237,7 @@ fn output(path: &String, pathbuf: &std::path::PathBuf, variant: &String, macro_s
     .unwrap();
     outputfile.write_all(macro_string.as_bytes()).unwrap();
 }
+
 
 fn ware_replace(
     ware: String,
@@ -249,3 +280,34 @@ fn ware_replace(
     let ware = ware.replace("pasta", &tword);
     ware
 }
+
+
+// Alby's tfile stuff
+// use t_path from Config toml and id string from parsed macro/ware
+fn get_tfile_value(id_tfile: String, unwrapped_tfile: &str) -> String {
+    println!("{:?}", id_tfile);
+    let re = Regex::new(r"\d+").unwrap();
+    let mut tfile_vec = vec![];
+    for caps in re.captures_iter(&id_tfile) {
+        let num = caps.get(0).unwrap().as_str();
+        tfile_vec.push(num)
+    }
+    println!("{:?}", tfile_vec);
+    let mut tfile_value = "".to_string();
+    let mut flag = false;
+    for line in unwrapped_tfile.lines() {
+        if flag == false {
+            if line.contains(format!("<page id=\"{}", tfile_vec[0]).as_str()) {
+                flag = true
+            };
+        } else {
+            if line.contains(tfile_vec[1]) {
+                tfile_value.push_str(line);
+                break;
+            };
+        }
+    }
+    tfile_value
+}
+
+
