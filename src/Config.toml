@@ -1,12 +1,169 @@
 [config]
 varbool = true
 variant_name = "_pasta"
+variant_tname = "Pasta"
 xl_dir_path = "D:/x4_extract_2.6/assets/units/size_xl/macros"
 l_dir_path = "D:/x4_extract_2.6/assets/units/size_l/macros"
 m_dir_path = "D:/x4_extract_2.6/assets/units/size_m/macros"
 s_dir_path = "D:/x4_extract_2.6/assets/units/size_s/macros"
 ware_path = "D:/x4_extract_2.6/libraries/wares.xml"
-t_path = ""
+t_path = "D:/x4_extract_2.6/t/0001-l044.xml"
 out_path ="C:/Users/alby/Desktop/tpwar_targets/tpwar_ship_target/"
+# t
+pageid = "20957250"
+
+
+#TODO
+# - write an explanantion of the physics properties
+# - determinism for people, hangarcapacity, ammo
+
+# while it is possible to add production cost, 
+# the effects would have to be seriously considered 
+# and not the result of some random function
+
+# no decimals! 
+# (a..b) * purposemod of shiptype 
+
+# this is largely irrelevant to what numbers you might select 
+# but I wrote the note to us here and here it stays:
+ 
+# the result of a range will be refered to as n
+# cargo, hull, mass, are first order values. 
+# these values use purposemod to modify which one 
+# starts the chain of calculation
+# first order values return n. 
+# n > average sets the average of the next calculation 
+# as the max of the next range. 
+# n < average sets the average of the next calculation 
+# as the min of the next range. 
+# !!! note: mass has an inverse relationship to the other first order values 
+# so reverse the logic above for mass 
+
+# trade_purposemod example:
+# cargo = n
+# mass = n inversely bounded by the result of cargo n 
+# hull = n is ALSO inversely bounded by the result of mass
+# second order stuff like: unit, ammo, explosion 
+# follow the same order for all purpose/class. 
+
+
+
 
 [xlconfig]
+#purpose
+trade_purposemod = 1
+fight_purposemod = 1
+build_purposemod = 1
+mine_purposemod = 1
+auxiliary_purposemod= 1
+#physics
+mass= [549, 5049]
+i_pitch= [617, 617]
+i_yaw= [617, 317]
+i_roll= [493, 493]
+forward= [189, 189]
+reverse= [759, 759]
+horizontal= [259, 259]
+vertical= [259, 259]
+d_pitch= [809, 809]
+d_yaw= [809, 809]
+d_roll= [809, 809]
+#stats
+explosion = [1, 5]
+ammo = [100, 1000]
+unit = [1, 5]
+hull = [40000, 150000]
+cargo = [12000, 50000]
+people = [10, 20]
+#hanagar capacity [s,m]
+hangarcapacity = [10,20]
+# small = 10
+# medium = 10
+[l_config]
+#purpose
+trade_purposemod= 1
+fight_purposemod= 1
+build_purposemod= 1
+mine_purposemod= 1
+auxiliary_purposemod= 1
+#physics
+mass= [196, 196]
+i_pitch= [96, 96]
+i_yaw= [96, 96]
+i_roll= [77, 77]
+forward= [99, 99]
+reverse= [396, 396]
+horizontal= [73, 73]
+vertical= [73, 73]
+d_pitch= [106, 106]
+d_yaw= [106, 106]
+d_roll= [106, 106]
+#stats
+explosion = [1, 5]
+ammo = [1, 5]
+unit = [1, 5]
+hull = [1, 5]
+cargo = [1, 5]
+people = [10, 20]
+#hanagar capacity
+small = 10
+medium = 10
+
+[m_config]
+#purpose
+trade_purposemod= 1
+fight_purposemod= 1
+build_purposemod= 1
+mine_purposemod= 1
+auxiliary_purposemod= 1
+#physics
+mass= 26
+i_pitch= 4
+i_yaw= 4
+i_roll= 3
+forward= 5
+reverse= 20
+horizontal= 12
+vertical= 12
+d_pitch= 8
+d_yaw= 8
+d_roll= 8
+#stats
+explosion = [1, 5]
+ammo = [1, 5]
+unit = [1, 5]
+hull = [1, 5]
+cargo = [1, 5]
+people = [10, 20]
+#hanagar capacity
+small = 10
+
+
+[s_config]
+#purpose
+trade_purposemod= 1
+fight_purposemod= 1
+build_purposemod= 1
+mine_purposemod= 1
+auxiliary_purposemod= 1
+#physics
+mass= 6
+i_pitch= 1 
+i_yaw= 1 
+i_roll= 1 
+forward= 4 
+reverse= 17 
+horizontal= 4 
+vertical= 4 
+d_pitch= 3 
+d_yaw= 3 
+d_roll= 3 
+#stats
+explosion = [1, 5]
+ammo = [1, 5]
+unit = [1, 5]
+hull = [1, 5]
+cargo = [1, 5]
+people = [10, 20]
+
+     
