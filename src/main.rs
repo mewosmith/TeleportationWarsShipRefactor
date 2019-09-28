@@ -1,9 +1,9 @@
 use rand::Rng;
 use regex::Regex;
+use std::collections::HashMap;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
-use std::collections::HashMap;
 #[macro_use]
 extern crate serde;
 extern crate serde_xml_rs;
@@ -61,19 +61,19 @@ struct xl_config {
 //
 // xml ship
 //
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug)]
 struct Macros {
     r#macro: NameMacro,
 }
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug)]
 struct NameMacro {
     name: String,
     class: String,
     component: Component,
     properties: Properties,
 }
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug)]
 struct Component {
     r#ref: String,
 }
@@ -129,6 +129,19 @@ struct Owner {
 
 #[derive(Deserialize, Debug, Default)]
 struct t {
+    id: String,
+    #[serde(rename = "$value")]
+    content: String,
+}
+
+#[derive(Deserialize, Debug, Default)]
+struct Storage {
+    id: String,
+    #[serde(rename = "$value")]
+    content: String,
+}
+#[derive(Deserialize, Debug, Default)]
+struct Shipstorage {
     id: String,
     #[serde(rename = "$value")]
     content: String,
@@ -201,11 +214,13 @@ fn main() {
     // println!("hull {}", min_and_value.1);
 
     // storage vecs
-    // Cg089
+
     let mut macro_relations = HashMap::new();
     let mut cargo_vec: Vec<String> = vec![];
     let mut shipstorage_vec: Vec<String> = vec![];
 
+
+    // invariant!!! - this reads the ships before the storage only because its somehow alphabetized 
     for entry in fs::read_dir(&toml_parsed.config.xl_dir_path).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
@@ -216,7 +231,7 @@ fn main() {
             tname += 100;
             tdesc += 100;
             let mut macro_string = fs::read_to_string(&path).unwrap();
-            // Cg089
+
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
             if toml_parsed.config.varbool == true {
@@ -263,7 +278,7 @@ fn main() {
             }
             // common macro stuff
             // first order
-            let cargo = "";
+            let mut cargo = 0;
             let mut mass = 0;
             let hull = "";
             // second order
@@ -290,7 +305,7 @@ fn main() {
             // let cargo = "";
             // let cargo = "";
             let purpose = &macro_parsed.r#macro.properties.purpose.primary;
-            println!("purpose {}", purpose);
+            // println!("purpose {}", purpose);
             /*
             these ifs determine the ordered values and should eventually contain some unique logic beyond order
             a few points about the ordering:
@@ -312,7 +327,7 @@ fn main() {
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
                 let min_and_value = return_min_and_value(*min, *max);
-                 mass = min_and_value.1;
+                mass = min_and_value.1;
                 // cargo
                 let mut min = &toml_parsed.xlconfig.cargo[0];
                 let mut max = &toml_parsed.xlconfig.cargo[1];
@@ -323,7 +338,7 @@ fn main() {
                     min = &average
                 }
                 let min_and_value = return_min_and_value(*min, *max);
-                let cargo = min_and_value.1;
+                cargo = min_and_value.1;
                 // hull
                 let mut min = &toml_parsed.xlconfig.hull[0];
                 let mut max = &toml_parsed.xlconfig.hull[1];
@@ -352,7 +367,7 @@ fn main() {
                     min = &average
                 }
                 let min_and_value = return_min_and_value(*min, *max);
-                 mass = min_and_value.1;
+                mass = min_and_value.1;
                 // cargo
                 let mut min = &toml_parsed.xlconfig.cargo[0];
                 let mut max = &toml_parsed.xlconfig.cargo[1];
@@ -363,14 +378,14 @@ fn main() {
                     min = &average
                 }
                 let min_and_value = return_min_and_value(*min, *max);
-                let cargo = min_and_value.1;
+                cargo = min_and_value.1;
             }
             if purpose == "trade" {
                 // cargo
                 let min = &toml_parsed.xlconfig.cargo[0];
                 let max = &toml_parsed.xlconfig.cargo[1];
                 let min_and_value = return_min_and_value(*min, *max);
-                let cargo = min_and_value.1;
+                cargo = min_and_value.1;
                 // mass
                 let mut min = &toml_parsed.xlconfig.mass[0];
                 let mut max = &toml_parsed.xlconfig.mass[1];
@@ -381,7 +396,7 @@ fn main() {
                     min = &average
                 }
                 let min_and_value = return_min_and_value(*min, *max);
-               mass = min_and_value.1;
+                mass = min_and_value.1;
                 // hull
                 let mut min = &toml_parsed.xlconfig.hull[0];
                 let mut max = &toml_parsed.xlconfig.hull[1];
@@ -399,7 +414,7 @@ fn main() {
                 let min = &toml_parsed.xlconfig.cargo[0];
                 let max = &toml_parsed.xlconfig.cargo[1];
                 let min_and_value = return_min_and_value(*min, *max);
-                let cargo = min_and_value.1;
+                cargo = min_and_value.1;
                 // hull
                 let mut min = &toml_parsed.xlconfig.hull[0];
                 let mut max = &toml_parsed.xlconfig.hull[1];
@@ -421,7 +436,7 @@ fn main() {
                     min = &average
                 }
                 let min_and_value = return_min_and_value(*min, *max);
-                 mass = min_and_value.1;
+                mass = min_and_value.1;
             }
             let physics = format!(
                 "<physics mass=\"{}\">
@@ -439,7 +454,7 @@ fn main() {
             }
             // cargo replace
             // let pattern == &macroname.replace(ship_)
-            // ok, new problem: the values for a ship 
+            // ok, new problem: the values for a ship
             // if &macroname.contains("con_storage01") == &true{
             //     cargo_vec.push(cargo.to_string());
             // }
@@ -447,13 +462,26 @@ fn main() {
             //     replace_pattern(&pattern, &macro_string, cargo);
             // }
             // let pasta = cargo_vec;
+            let min = &toml_parsed.xlconfig.hangarcapacity[0];
+            let max = &toml_parsed.xlconfig.hangarcapacity[1];
+            let min_and_value = return_min_and_value(*min, *max);
+            let small = min_and_value.1;
+            let min = &toml_parsed.xlconfig.hangarcapacity[2];
+            let max = &toml_parsed.xlconfig.hangarcapacity[3];
+            let min_and_value = return_min_and_value(*min, *max);
+            let medium = min_and_value.1;
 
-            // Cg089
-            let cloned = macroname.clone();
-            macro_relations.insert(cloned, cargo);
+            macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
+            
             // println!("{:#?}", macro_relations);
+            // println!("{:#?}", macro_relations.get(macroname.to_owned()).unwrap().0);
             // generic_storage
-
+            if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship","storage")) {
+                println!("{:#?}", &macroname);
+                  println!("{:#?}", &macro_parsed);
+                  
+            }
+          
             // ware
 
             let ware_string = fs::read_to_string(&toml_parsed.config.ware_path).unwrap();
@@ -496,7 +524,7 @@ fn main() {
             output(&toml_parsed.config.out_path, &path, &toml_parsed.config.variant_name, &macro_string);
         }
     }
-
+ 
     let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "wares.xml")).unwrap();
     outputfile.write_all(ware_file_string.as_bytes()).unwrap();
     let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "tfiles.xml")).unwrap();

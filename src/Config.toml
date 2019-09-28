@@ -76,7 +76,7 @@ hull = [40000, 150000]
 cargo = [12000, 50000]
 people = [10, 20]
 #hanagar capacity [s,m]
-hangarcapacity = [10,20]
+hangarcapacity = [10, 40 ,1, 10]
 # small = 10
 # medium = 10
 [l_config]
