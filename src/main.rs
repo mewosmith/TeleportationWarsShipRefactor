@@ -61,19 +61,19 @@ struct xl_config {
 //
 // xml ship
 //
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Default)]
 struct Macros {
     r#macro: NameMacro,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Default)]
 struct NameMacro {
     name: String,
     class: String,
     component: Component,
     properties: Properties,
 }
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Default)]
 struct Component {
     r#ref: String,
 }
@@ -171,6 +171,7 @@ fn main() {
     let mut tdesc = 3;
     let mut tvar = 4;
     let mut tshort = 5;
+    let mut i_string = "".to_string();
     let mut t_string = "".to_string();
     let mut ware_file_string = "".to_string();
     let mut ware_new = "".to_string();
@@ -180,47 +181,11 @@ fn main() {
     let t_path = &toml_parsed.config.t_path;
     let unwrapped_tfile = fs::read_to_string(t_path).unwrap();
 
-    // // cargo
-    // let mut min = &toml_parsed.xlconfig.cargo[0];
-    // let mut max = &toml_parsed.xlconfig.cargo[1];
-    // let min_and_value = return_min_and_value(*min, *max);
-    // let cargo = min_and_value.1;
-    // println!("cargo {}", min_and_value.1);
-    // // mass
-    // let mut min = &toml_parsed.xlconfig.mass[0];
-    // let mut max = &toml_parsed.xlconfig.mass[1];
-    // let average = min + max / 2;
-    // if min_and_value.0 == 0 {
-    //     min = &average;
-    //     println!(" above average");
-    // } else {
-    //     max = &average
-    // }
-    // let min_and_value = return_min_and_value(*min, *max);
-    // let mass = min_and_value.1;
-    // println!("mass {}", min_and_value.1);
-    // // hull
-    // let mut min = &toml_parsed.xlconfig.hull[0];
-    // let mut max = &toml_parsed.xlconfig.hull[1];
-    // let average = min + max / 2;
-    // if min_and_value.0 == 0 {
-    //     min = &average;
-    //     println!(" above average");
-    // } else {
-    //     max = &average
-    // }
-    // let min_and_value = return_min_and_value(*min, *max);
-    // let hull = min_and_value.1;
-    // println!("hull {}", min_and_value.1);
-
-    // storage vecs
-
     let mut macro_relations = HashMap::new();
     let mut cargo_vec: Vec<String> = vec![];
     let mut shipstorage_vec: Vec<String> = vec![];
 
-
-    // invariant!!! - this reads the ships before the storage only because its somehow alphabetized 
+    // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
     for entry in fs::read_dir(&toml_parsed.config.xl_dir_path).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
@@ -234,7 +199,16 @@ fn main() {
 
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
+
             if toml_parsed.config.varbool == true {
+                let pattern = &macro_parsed.r#macro.name;
+                if pattern != "" {
+                    let namecombo = &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                    macro_string = replace_pattern(pattern, &macro_string, namecombo)
+                    i_add(i_string,namecombo,"")
+                }
                 let pattern = &macro_parsed.r#macro.properties.identification.name;
                 if pattern != "" {
                     //tfile
@@ -307,6 +281,8 @@ fn main() {
             let purpose = &macro_parsed.r#macro.properties.purpose.primary;
             // println!("purpose {}", purpose);
             /*
+
+            might.. want to check the odd assumption.... but hey 50/50... right?
             these ifs determine the ordered values and should eventually contain some unique logic beyond order
             a few points about the ordering:
             1. the order function should not be applied second order values as it loses its influence in longer chains of values.
@@ -446,42 +422,60 @@ fn main() {
                 mass, i_pitch, i_yaw, i_roll, forward, reverse, horizontal, vertical, d_pitch, d_yaw, d_roll
             );
             let re = Regex::new("((?s)<physics.*</physics>)").unwrap();
-            let macro_string = re.replace(&macro_string, physics.as_str()).into_owned();
+            macro_string = re.replace(&macro_string, physics.as_str()).into_owned();
             // hull replace
             let pattern = &macro_parsed.r#macro.properties.hull.max;
             if pattern != "" {
                 replace_pattern(&pattern, &macro_string, hull);
             }
-            // cargo replace
-            // let pattern == &macroname.replace(ship_)
-            // ok, new problem: the values for a ship
-            // if &macroname.contains("con_storage01") == &true{
-            //     cargo_vec.push(cargo.to_string());
-            // }
-            // if pattern != "" {
-            //     replace_pattern(&pattern, &macro_string, cargo);
-            // }
-            // let pasta = cargo_vec;
-            let min = &toml_parsed.xlconfig.hangarcapacity[0];
-            let max = &toml_parsed.xlconfig.hangarcapacity[1];
-            let min_and_value = return_min_and_value(*min, *max);
-            let small = min_and_value.1;
-            let min = &toml_parsed.xlconfig.hangarcapacity[2];
-            let max = &toml_parsed.xlconfig.hangarcapacity[3];
-            let min_and_value = return_min_and_value(*min, *max);
-            let medium = min_and_value.1;
-
-            macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
-            
-            // println!("{:#?}", macro_relations);
-            // println!("{:#?}", macro_relations.get(macroname.to_owned()).unwrap().0);
-            // generic_storage
-            if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship","storage")) {
-                println!("{:#?}", &macroname);
-                  println!("{:#?}", &macro_parsed);
-                  
+            let mut small = 0;
+            if macro_string.contains("shipstorage_gen_s_01_macro") == true {
+                let min = &toml_parsed.xlconfig.hangarcapacity[0];
+                let max = &toml_parsed.xlconfig.hangarcapacity[1];
+                let min_and_value = return_min_and_value(*min, *max);
+                small = min_and_value.1;
+                // replace name
+                macro_string = macro_string.replace(
+                    "shipstorage_gen_s_01_macro",
+                    &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
+                        .replace("ship", "shipstorage"),
+                );
             }
-          
+            let mut medium = 0;
+            if macro_string.contains("shipstorage_gen_m_01_macro") == true {
+                let min = &toml_parsed.xlconfig.hangarcapacity[2];
+                let max = &toml_parsed.xlconfig.hangarcapacity[3];
+                let min_and_value = return_min_and_value(*min, *max);
+                medium = min_and_value.1;
+                //  replace name
+                macro_string = macro_string.replace(
+                    "shipstorage_gen_m_01_macro",
+                    &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
+                        .replace("ship", "shipstorage"),
+                );
+            }
+            // table!
+            macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
+
+            if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
+                // oh this is either really smart or really dumb
+
+                let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
+                if medium > &0 {
+                    let size = "size_m";
+                    makeshipstorage(&toml_parsed, &macroname.to_string(), &size.to_string(), &medium.to_string());
+                }
+                let small = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().1;
+                if small > &0 {
+                    let size = "size_s";
+                    makeshipstorage(&toml_parsed, &macroname.to_string(), &size.to_string(), &small.to_string());
+                }
+            }
+
             // ware
 
             let ware_string = fs::read_to_string(&toml_parsed.config.ware_path).unwrap();
@@ -524,11 +518,45 @@ fn main() {
             output(&toml_parsed.config.out_path, &path, &toml_parsed.config.variant_name, &macro_string);
         }
     }
- 
+
     let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "wares.xml")).unwrap();
     outputfile.write_all(ware_file_string.as_bytes()).unwrap();
     let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "tfiles.xml")).unwrap();
     outputfile.write_all(t_string.as_bytes()).unwrap();
+}
+
+fn makeshipstorage(toml_parsed: &Toml, macroname: &String, size: &String, count: &String) -> () {
+    let shipstorage_string = format!(
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+ <!--Exported by: Michael (192.168.3.150) at 09.11.2017_11-30-00-->
+ <macros>
+   <macro name=\"{}\" class=\"dockingbay\">
+     <component ref=\"generic_dockingbay\" />
+     <properties>
+       <identification unique=\"0\" />
+       <dock capacity=\"{}\" external=\"0\" storage=\"1\" />
+       <room walkable=\"0\" />
+       <docksize tags=\"{}\" />
+     </properties>
+   </macro>
+ </macros>",
+        &macroname
+            .replace(".xml", "")
+            .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size.as_str(), "_macro"].concat())
+            .replace("storage", "shipstorage"),
+        count,
+        size
+    );
+
+    let mut outputfile = File::create(format!(
+        "{}{}",
+        &toml_parsed.config.out_path,
+        &macroname
+            .replace("storage", "shipstorage_small")
+            .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size.as_str(), "_macro"].concat())
+    ))
+    .unwrap();
+    outputfile.write_all(shipstorage_string.as_bytes()).unwrap();
 }
 
 // input min and max of expected range -> min or average of the range, and value of the range result.
