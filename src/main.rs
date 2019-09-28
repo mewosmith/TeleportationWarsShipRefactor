@@ -180,6 +180,17 @@ fn main() {
     let variant = &toml_parsed.config.varbool;
     let t_path = &toml_parsed.config.t_path;
     let unwrapped_tfile = fs::read_to_string(t_path).unwrap();
+    let out_path = toml_parsed.config.out_path.clone();
+    
+    let t_out_path = [&out_path, "t/"].concat();
+    fs::create_dir_all(&t_out_path).unwrap();
+    let i_out_path = [&out_path, "index/"].concat();
+    fs::create_dir_all(&i_out_path).unwrap();
+    let m_out_path = [&out_path, "macros/"].concat();
+    fs::create_dir_all(&m_out_path).unwrap();
+    let w_out_path = [&out_path, "libraries/"].concat();
+    fs::create_dir_all(&w_out_path).unwrap();
+
 
     let mut macro_relations = HashMap::new();
     let mut cargo_vec: Vec<String> = vec![];
@@ -205,7 +216,7 @@ fn main() {
                 let namecombo = &macroname
                         .replace(".xml", "")
                         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
-                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
+                i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
             }
 
             if toml_parsed.config.varbool == true {
@@ -215,7 +226,7 @@ fn main() {
                         .replace(".xml", "")
                         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
                     macro_string = replace_pattern(pattern, &macro_string, namecombo);
-                    i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
+                    i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.name;
                 if pattern != "" {
@@ -449,7 +460,7 @@ fn main() {
                         .replace("ship", "shipstorage");
                 macro_string = macro_string.replace(
                     "shipstorage_gen_s_01_macro", namecombo);
-                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
+                i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
             }
             let mut medium = 0;
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
@@ -464,7 +475,7 @@ fn main() {
                         .replace("ship", "shipstorage");
                 macro_string = macro_string.replace(
                     "shipstorage_gen_s_01_macro", namecombo);
-                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
+                i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
             }
             // table!
             macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
@@ -475,20 +486,12 @@ fn main() {
                 let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
                 if medium > &0 {
                     let size = "size_m";
-                    let namecombo = &macroname
-                        .replace(".xml", "")
-                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size, "_macro"].concat())
-                        .replace("storage", "shipstorage");
-                    makeshipstorage(&toml_parsed, &macroname.to_string(), &size.to_string(), &medium.to_string());
+                    makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &medium.to_string());
                 }
                 let small = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().1;
                 if small > &0 {
                     let size = "size_s";
-                    let namecombo = &macroname
-                        .replace(".xml", "")
-                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size, "_macro"].concat())
-                        .replace("storage", "shipstorage");
-                    makeshipstorage(&toml_parsed, &macroname.to_string(), &size.to_string(), &small.to_string());
+                    makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &small.to_string());
                 }
             }
 
@@ -531,19 +534,19 @@ fn main() {
                 }
             }
 
-            output(&toml_parsed.config.out_path, &path, &toml_parsed.config.variant_name, &macro_string);
+            output(&m_out_path, &path, &toml_parsed.config.variant_name, &macro_string);
         }
     }
 
-    let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "wares.xml")).unwrap();
+    let mut outputfile = File::create(format!("{}{}", &w_out_path, "wares.xml")).unwrap();
     outputfile.write_all(ware_file_string.as_bytes()).unwrap();
-    let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "tfiles.xml")).unwrap();
+    let mut outputfile = File::create(format!("{}{}", &t_out_path, "tfiles.xml")).unwrap();
     outputfile.write_all(t_string.as_bytes()).unwrap();
-    let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "index.xml")).unwrap();
+    let mut outputfile = File::create(format!("{}{}", &i_out_path, "index.xml")).unwrap();
     outputfile.write_all(i_string.as_bytes()).unwrap();
 }
 
-fn makeshipstorage(toml_parsed: &Toml, macroname: &String, size: &String, count: &String) -> () {
+fn makeshipstorage(toml_parsed: &Toml, m_out_path: &String, macroname: &String, size: &String, count: &String) -> () {
     let shipstorage_string = format!(
         "<?xml version=\"1.0\" encoding=\"utf-8\"?>
  <!--Exported by: Michael (192.168.3.150) at 09.11.2017_11-30-00-->
@@ -568,7 +571,7 @@ fn makeshipstorage(toml_parsed: &Toml, macroname: &String, size: &String, count:
 
     let mut outputfile = File::create(format!(
         "{}{}",
-        &toml_parsed.config.out_path,
+        &m_out_path,
         &macroname
             .replace("storage", "shipstorage_small")
             .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size.as_str(), "_macro"].concat())
