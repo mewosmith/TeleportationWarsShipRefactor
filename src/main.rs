@@ -206,8 +206,8 @@ fn main() {
                     let namecombo = &macroname
                         .replace(".xml", "")
                         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
-                    macro_string = replace_pattern(pattern, &macro_string, namecombo)
-                    i_add(i_string,namecombo,"")
+                    macro_string = replace_pattern(pattern, &macro_string, namecombo);
+                    i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.name;
                 if pattern != "" {
@@ -304,7 +304,7 @@ fn main() {
                 let max = &toml_parsed.xlconfig.mass[1];
                 let min_and_value = return_min_and_value(*min, *max);
                 mass = min_and_value.1;
-                // cargo
+                // cargo TODO reverse (min first forces similar values)
                 let mut min = &toml_parsed.xlconfig.cargo[0];
                 let mut max = &toml_parsed.xlconfig.cargo[1];
                 let average = min + max / 2;
@@ -523,6 +523,8 @@ fn main() {
     outputfile.write_all(ware_file_string.as_bytes()).unwrap();
     let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "tfiles.xml")).unwrap();
     outputfile.write_all(t_string.as_bytes()).unwrap();
+    let mut outputfile = File::create(format!("{}{}", &toml_parsed.config.out_path, "index.xml")).unwrap();
+    outputfile.write_all(i_string.as_bytes()).unwrap();
 }
 
 fn makeshipstorage(toml_parsed: &Toml, macroname: &String, size: &String, count: &String) -> () {
@@ -630,4 +632,9 @@ fn get_tfile_value(id_tfile: &String, unwrapped_tfile: &str) -> String {
     }
 
     tfile_value
+}
+
+fn i_add(macroname: String, folderpath: String) -> String {
+    let i_add_value = format!("<entry name=\"{}\" value=\"{}{}\" />\n", macroname, folderpath, macroname);
+    i_add_value.to_string()
 }
