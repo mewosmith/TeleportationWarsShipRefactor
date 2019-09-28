@@ -186,6 +186,7 @@ fn main() {
     let mut shipstorage_vec: Vec<String> = vec![];
 
     // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
+    // TODO add storage name replace
     for entry in fs::read_dir(&toml_parsed.config.xl_dir_path).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
@@ -199,6 +200,13 @@ fn main() {
 
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
+
+            if macro_string.contains("class=\"storage\"") == true {
+                let namecombo = &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
+            }
 
             if toml_parsed.config.varbool == true {
                 let pattern = &macro_parsed.r#macro.name;
@@ -435,13 +443,13 @@ fn main() {
                 let min_and_value = return_min_and_value(*min, *max);
                 small = min_and_value.1;
                 // replace name
-                macro_string = macro_string.replace(
-                    "shipstorage_gen_s_01_macro",
-                    &macroname
+                let namecombo = &macroname
                         .replace(".xml", "")
                         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
-                        .replace("ship", "shipstorage"),
-                );
+                        .replace("ship", "shipstorage");
+                macro_string = macro_string.replace(
+                    "shipstorage_gen_s_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
             }
             let mut medium = 0;
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
@@ -450,13 +458,13 @@ fn main() {
                 let min_and_value = return_min_and_value(*min, *max);
                 medium = min_and_value.1;
                 //  replace name
-                macro_string = macro_string.replace(
-                    "shipstorage_gen_m_01_macro",
-                    &macroname
+                let namecombo = &macroname
                         .replace(".xml", "")
                         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
-                        .replace("ship", "shipstorage"),
-                );
+                        .replace("ship", "shipstorage");
+                macro_string = macro_string.replace(
+                    "shipstorage_gen_s_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.out_path.to_string()));
             }
             // table!
             macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
@@ -467,11 +475,19 @@ fn main() {
                 let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
                 if medium > &0 {
                     let size = "size_m";
+                    let namecombo = &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size, "_macro"].concat())
+                        .replace("storage", "shipstorage");
                     makeshipstorage(&toml_parsed, &macroname.to_string(), &size.to_string(), &medium.to_string());
                 }
                 let small = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().1;
                 if small > &0 {
                     let size = "size_s";
+                    let namecombo = &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size, "_macro"].concat())
+                        .replace("storage", "shipstorage");
                     makeshipstorage(&toml_parsed, &macroname.to_string(), &size.to_string(), &small.to_string());
                 }
             }
