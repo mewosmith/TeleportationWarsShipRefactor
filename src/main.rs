@@ -197,7 +197,7 @@ fn main() {
     let mut shipstorage_vec: Vec<String> = vec![];
 
     // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
-    // TODO add storage name replace
+    // TODO fix index path info for proper Extensions mod folder
     for entry in fs::read_dir(&toml_parsed.config.xl_dir_path).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
