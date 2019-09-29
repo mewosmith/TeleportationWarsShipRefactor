@@ -163,9 +163,13 @@ struct Shipstorage {
 */
 
 fn main() {
-    // math test
+    // README!!!!!!!!!
+    // ok, lets talk about how this works.
+    // we iterate over some path like D:/x4_extract_2.6/assets/units/size_xl/macros
+    // shipstorage, index, tfiles are generated from macro templates
+    // a hashmap is used to keep track of values calculated for ships so that when their
+    // corresponding storage macro is read the ship stats can be applied to it and the shipstorage macro can be generated
 
-    // math test
     let mut tname = 1;
     let mut tbase = 2;
     let mut tdesc = 3;
@@ -174,7 +178,7 @@ fn main() {
     let mut i_string = "".to_string();
     let mut t_string = "".to_string();
     let mut ware_file_string = "".to_string();
-    let mut ware_new = "".to_string();
+    let ware_new = "".to_string();
     let toml_str = include_str!("Config.toml");
     let toml_parsed: Toml = toml::from_str(&toml_str).unwrap();
     let variant = &toml_parsed.config.varbool;
@@ -182,8 +186,6 @@ fn main() {
     let unwrapped_tfile = fs::read_to_string(t_path).unwrap();
 
     let mut macro_relations = HashMap::new();
-    let mut cargo_vec: Vec<String> = vec![];
-    let mut shipstorage_vec: Vec<String> = vec![];
 
     // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
     for entry in fs::read_dir(&toml_parsed.config.xl_dir_path).unwrap() {
@@ -254,7 +256,7 @@ fn main() {
             // first order
             let mut cargo = 0;
             let mut mass = 0;
-            let hull = "";
+            let hull = 0;
             // second order
             let ammo = "";
             let hangarcapacity = "";
@@ -298,34 +300,52 @@ fn main() {
 
             purpose, mass, hull, ammo
             */
+            
+
+            // return_min_and_value
+            // if value <= average
+            // then min = average
+            //
+            let mut greater_than_average = false;
             if purpose == "build" {
-                //mass
+                //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let min_and_value = return_min_and_value(*min, *max);
-                mass = min_and_value.1;
-                // cargo TODO reverse (min first forces similar values)
+                let mass = return_min_and_value(*min, *max);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }            
+                // cargo // done
                 let mut min = &toml_parsed.xlconfig.cargo[0];
                 let mut max = &toml_parsed.xlconfig.cargo[1];
                 let average = min + max / 2;
-                if min_and_value.0 == 0 {
-                    max = &average;
-                } else {
-                    min = &average
-                }
-                let min_and_value = return_min_and_value(*min, *max);
-                cargo = min_and_value.1;
-                // hull
-                let mut min = &toml_parsed.xlconfig.hull[0];
-                let mut max = &toml_parsed.xlconfig.hull[1];
-                let average = min + max / 2;
-                if min_and_value.0 == 0 {
+                if greater_than_average == true {
                     min = &average;
                 } else {
                     max = &average
                 }
-                let min_and_value = return_min_and_value(*min, *max);
-                let hull = min_and_value.1;
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                cargo = return_min_and_value(*min, *max);
+               
+                // hull
+                let mut min = &toml_parsed.xlconfig.hull[0];
+                let mut max = &toml_parsed.xlconfig.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                hull = return_min_and_value(*min, *max);
             }
             if purpose == "fight" {
                 //hull
@@ -562,15 +582,11 @@ fn makeshipstorage(toml_parsed: &Toml, macroname: &String, size: &String, count:
 }
 
 // input min and max of expected range -> min or average of the range, and value of the range result.
-fn return_min_and_value(min: i32, max: i32) -> (i32, i32) {
+fn return_min_and_value(min: i32, max: i32) -> (i32) {
     let mut prng = rand::thread_rng();
     let mut returnmin = 0;
     let value = prng.gen_range(min, max);
-    let average = min + max / 2;
-    if value <= average {
-        returnmin = average;
-    }
-    (returnmin, value)
+    value
 }
 
 fn replace_pattern(pattern: &String, text: &String, replace: &str) -> String {
