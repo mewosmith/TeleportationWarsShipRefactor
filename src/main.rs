@@ -245,6 +245,14 @@ fn main() {
             tname += 100;
             tdesc += 100;
             let mut macro_string = fs::read_to_string(&path).unwrap();
+            if macro_string.contains("explosiondamage") {
+                let re = Regex::new("(<explosiondamage.*\n)").unwrap();
+                macro_string = re.replace(&macro_string, "<explosiondamage value=\"11111\" />\n").into_owned();
+            }
+            else {
+                let re = "</software>";
+                macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
+            }
 
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
@@ -649,7 +657,7 @@ fn main() {
                     .replace(".xml", "")
                     .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
                     .replace("ship", "shipstorage");
-                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
+                macro_string = macro_string.replace("shipstorage_gen_m_01_macro", namecombo);
                 i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
             // table!
