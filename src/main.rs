@@ -530,6 +530,7 @@ fn main() {
             );
             let re = Regex::new("((?s)<physics.*</physics>)").unwrap();
             macro_string = re.replace(&macro_string, physics.as_str()).into_owned();
+            // storage and shipstorage
             // hull replace
             let pattern = &macro_parsed.r#macro.properties.hull.max;
             if pattern != "" {
@@ -565,11 +566,11 @@ fn main() {
             }
             // table!
             macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
-
+        
             if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
                 // oh this is either really smart or really dumb
+                //cargo value
                 let re = Regex::new("<cargo max=\".*\" ta").unwrap();
-
                 macro_string = re
                     .replace(
                         &macro_string,
@@ -580,6 +581,16 @@ fn main() {
                         .as_str(),
                     )
                     .to_string();
+                // storage name
+                let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+                macro_string = replace_pattern(
+                    &pattern,
+                    &macro_string,
+                    &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                        .replace("ship", "storage"),
+                );
 
                 let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
                 if medium > &0 {
