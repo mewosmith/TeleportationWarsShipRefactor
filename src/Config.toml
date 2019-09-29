@@ -14,7 +14,7 @@ pageid = "20957250"
 
 #racial faction deff
 [faction_vec]
-argon = ["argon", "antigone", "pasta", "sauce", "pizza"]
+argon = ["argon", "antigone", "pasta", "sauce", "pizza", "bill", "george", "jack", "jeff", "fred"]
 teladi = ["teladi", "ministry"]
 paranid = ["paranid", "holyorder"]
 xenon = ["xenon", ""]
