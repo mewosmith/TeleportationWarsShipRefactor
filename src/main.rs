@@ -305,7 +305,7 @@ fn main() {
             let mut ammo = 0;
             let mut unit = 0;
             let hangarcapacity = ""; // not used since we do small and medium separately
-            let mut people = 0;
+            let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
 
             //
             let i_pitch = "";
@@ -326,6 +326,7 @@ fn main() {
             // let cargo = "";
             // let cargo = "";
             let purpose = &macro_parsed.r#macro.properties.purpose.primary;
+            let mut purpose_mod = 1;
             // println!("purpose {}", purpose);
             /*
 
@@ -352,6 +353,7 @@ fn main() {
             //
             let mut greater_than_average = false;
             if purpose == "build" {
+                purpose_mod = toml_parsed.xlconfig.build_purposemod;
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
@@ -396,6 +398,7 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "fight" {
+                purpose_mod = toml_parsed.xlconfig.fight_purposemod;
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
@@ -440,6 +443,7 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "trade" {
+                purpose_mod = toml_parsed.xlconfig.trade_purposemod;
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
@@ -484,6 +488,7 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "auxiliary" {
+                purpose_mod = toml_parsed.xlconfig.auxiliary_purposemod;
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
@@ -527,7 +532,12 @@ fn main() {
                 }
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
-            // println!("purpose: {}, rarity: {}", purpose, rarity);
+            // apply purpose modifier to first order values
+            cargo = cargo * purpose_mod;
+            hull = hull * purpose_mod;
+            mass = mass * purpose_mod;
+            // TODO set physics + modify all values by purpose_mod
+            
             let physics = format!(
                 "<physics mass=\"{}\">
         <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
@@ -543,17 +553,17 @@ fn main() {
             if pattern != "" {
                 macro_string = macro_string.replace(pattern, &hull.to_string());
             }
-            // ammo choose and replace
+            // ammo choose, modify and replace
             let min = &toml_parsed.xlconfig.ammo[0];
             let max = &toml_parsed.xlconfig.ammo[1];
-            ammo = return_min_and_value(*min, *max);
+            ammo = return_min_and_value(*min, *max) * purpose_mod;
             let pattern = &macro_parsed.r#macro.properties.storage.missile;
             if pattern != "" {
                 macro_string = macro_string.replace(pattern, &ammo.to_string());
             }
             let min = &toml_parsed.xlconfig.unit[0];
             let max = &toml_parsed.xlconfig.unit[1];
-            unit = return_min_and_value(*min, *max);
+            unit = return_min_and_value(*min, *max) * purpose_mod;
             let pattern = &macro_parsed.r#macro.properties.storage.unit;
             if pattern != "" {
                 macro_string = macro_string.replace(pattern, &unit.to_string());
