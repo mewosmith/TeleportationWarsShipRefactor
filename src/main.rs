@@ -640,53 +640,54 @@ fn main() {
                         //      c. rarity # sockets
                         //          1. rarity calc from what?
                         //              a. # of bad rolls -> rarity !
-                        //              b. % of .. -> rarity 
-                        //          2. can we do some distinction of rarity of factions? no. 
-                        //// 
+                        //              b. % of .. -> rarity
+                        //          2. can we do some distinction of rarity of factions? no.
+                        ////
                         //
+                        let rarity = 5;
                         let pattern = &ware_parsed.owner.faction;
-                        // println!("{}",pattern);
-                        if pattern != "" {
-                
 
+                        if pattern != "" {
                             for faction in toml_parsed.faction_vec.argon.iter() {
                                 if pattern == faction {
-                                    // println!("pattern: {} faction: {}", pattern, faction);
+                                    let owner_string = &ownership(toml_parsed.faction_vec.argon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
                                     let re = Regex::new("<owner.* />").unwrap();
-                                    let mut owner_string = format!(
-                                        "<owner faction=\"{}\"/>",
-                                        toml_parsed.faction_vec.argon.choose(&mut rand::thread_rng()).unwrap()
-                                    );
-                                    owner_string.push_str(&format!(
-                                        "\n    <owner faction=\"{}\"/>",
-                                        toml_parsed.faction_vec.argon.choose(&mut rand::thread_rng()).unwrap()
-                                    ));
                                     ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
                                 }
                             }
                             for faction in toml_parsed.faction_vec.teladi.iter() {
                                 if pattern == faction {
-                                    // println!("pattern: {} faction: {}", pattern, faction)
+                                    let owner_string = &ownership(toml_parsed.faction_vec.teladi.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
                                 }
                             }
                             for faction in toml_parsed.faction_vec.paranid.iter() {
                                 if pattern == faction {
-                                    // println!("pattern: {} faction: {}", pattern, faction)
+                                    let owner_string = &ownership(toml_parsed.faction_vec.paranid.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
                                 }
                             }
                             for faction in toml_parsed.faction_vec.xenon.iter() {
                                 if pattern == faction {
-                                    // println!("pattern: {} faction: {}", pattern, faction)
+                                    let owner_string = &ownership(toml_parsed.faction_vec.xenon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
                                 }
                             }
                             for faction in toml_parsed.faction_vec.khaak.iter() {
                                 if pattern == faction {
-                                    // println!("pattern: {} faction: {}", pattern, faction)
+                                    let owner_string = &ownership(toml_parsed.faction_vec.khaak.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
                                 }
                             }
                             for faction in toml_parsed.faction_vec.pirates.iter() {
                                 if pattern == faction {
-                                    // println!("pattern: {} faction: {}", pattern, faction)
+                                    let owner_string = &ownership(toml_parsed.faction_vec.pirates.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
                                 }
                             }
                         }
@@ -719,6 +720,20 @@ fn main() {
     outputfile.write_all(t_string.as_bytes()).unwrap();
     let mut outputfile = File::create(format!("{}{}", &i_out_path, "index.xml")).unwrap();
     outputfile.write_all(i_string.as_bytes()).unwrap();
+}
+
+fn ownership(owners: rand::seq::SliceChooseIter<'_, [std::string::String], std::string::String>) -> (String) {
+    let mut owner_string = "".to_string();
+    let mut owners_vec: Vec<String> = vec![];
+    for owner in owners {
+        if owners_vec.contains(owner) == false {
+            owner_string.push_str(&format!("\n    <owner faction=\"{}\"/>", owner));
+            println!("{}", owner_string);
+            owners_vec.push(owner.to_string())
+        }
+    }
+    owners_vec.clear();
+    owner_string
 }
 
 fn makeshipstorage(toml_parsed: &Toml, m_out_path: &String, macroname: &String, size: &String, count: &String) -> () {
