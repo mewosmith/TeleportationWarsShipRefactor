@@ -43,11 +43,11 @@ struct Factions {
 
 #[derive(Deserialize, Debug, Default, Clone)]
 struct xl_config {
-    trade_purposemod: i32,
-    fight_purposemod: i32,
-    build_purposemod: i32,
-    mine_purposemod: i32,
-    auxiliary_purposemod: i32,
+    trade_purposemod: f32,
+    fight_purposemod: f32,
+    build_purposemod: f32,
+    mine_purposemod: f32,
+    auxiliary_purposemod: f32,
     // first order
     mass: Vec<i32>,
     hull: Vec<i32>,
@@ -326,7 +326,7 @@ fn main() {
             // let cargo = "";
             // let cargo = "";
             let purpose = &macro_parsed.r#macro.properties.purpose.primary;
-            let mut purpose_mod = 1;
+            let mut purpose_mod = 0.6;
             // println!("purpose {}", purpose);
             /*
 
@@ -533,40 +533,44 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             // apply purpose modifier to first order values
-            cargo = cargo * purpose_mod;
-            hull = hull * purpose_mod;
-            mass = mass * purpose_mod;
-            // TODO set physics + modify all values by purpose_mod
+            cargo = (cargo as f32 * purpose_mod) as i32;
+            hull = (hull as f32 * purpose_mod) as i32;
+            mass = (mass as f32 * purpose_mod) as i32;
+
+            // physics
             let min = &toml_parsed.xlconfig.i_pitch[0];
             let max = &toml_parsed.xlconfig.i_pitch[1];
-            i_pitch = return_min_and_value(*min, *max) * purpose_mod;
+            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let min = &toml_parsed.xlconfig.i_yaw[0];
             let max = &toml_parsed.xlconfig.i_yaw[1];
-            i_yaw = return_min_and_value(*min, *max) * purpose_mod;
+            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let min = &toml_parsed.xlconfig.i_roll[0];
             let max = &toml_parsed.xlconfig.i_roll[1];
-            i_roll = return_min_and_value(*min, *max) * purpose_mod;
+            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let min = &toml_parsed.xlconfig.forward[0];
             let max = &toml_parsed.xlconfig.forward[1];
-            forward = return_min_and_value(*min, *max) * purpose_mod;
+            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let min = &toml_parsed.xlconfig.reverse[0];
             let max = &toml_parsed.xlconfig.reverse[1];
-            reverse = return_min_and_value(*min, *max) * purpose_mod;
+            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let min = &toml_parsed.xlconfig.horizontal[0];
             let max = &toml_parsed.xlconfig.horizontal[1];
-            horizontal = return_min_and_value(*min, *max) * purpose_mod;
+            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let min = &toml_parsed.xlconfig.vertical[0];
             let max = &toml_parsed.xlconfig.vertical[1];
-            vertical = return_min_and_value(*min, *max) * purpose_mod;
+            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let min = &toml_parsed.xlconfig.d_pitch[0];
             let max = &toml_parsed.xlconfig.d_pitch[1];
-            d_pitch = return_min_and_value(*min, *max) * purpose_mod;
+            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            // println!("PITCH macro: {} min: {}, max: {}, value: {}, purpose: {}", macroname, min, max, d_pitch, purpose_mod);
             let min = &toml_parsed.xlconfig.d_yaw[0];
             let max = &toml_parsed.xlconfig.d_yaw[1];
-            d_yaw = return_min_and_value(*min, *max) * purpose_mod;
+            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            // println!("YAW macro: {} min: {}, max: {}, value: {}, purpose: {}", macroname, min, max, d_yaw, purpose_mod);
             let min = &toml_parsed.xlconfig.d_roll[0];
             let max = &toml_parsed.xlconfig.d_roll[1];
-            d_roll = return_min_and_value(*min, *max) * purpose_mod;
+            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            // println!("ROLL macro: {} min: {}, max: {}, value: {}, purpose: {}", macroname, min, max, d_roll, purpose_mod);
             let physics = format!(
                 "<physics mass=\"{}\">
         <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
@@ -585,14 +589,14 @@ fn main() {
             // ammo choose, modify and replace
             let min = &toml_parsed.xlconfig.ammo[0];
             let max = &toml_parsed.xlconfig.ammo[1];
-            ammo = return_min_and_value(*min, *max) * purpose_mod;
+            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let pattern = &macro_parsed.r#macro.properties.storage.missile;
             if pattern != "" {
                 macro_string = macro_string.replace(pattern, &ammo.to_string());
             }
             let min = &toml_parsed.xlconfig.unit[0];
             let max = &toml_parsed.xlconfig.unit[1];
-            unit = return_min_and_value(*min, *max) * purpose_mod;
+            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let pattern = &macro_parsed.r#macro.properties.storage.unit;
             if pattern != "" {
                 macro_string = macro_string.replace(pattern, &unit.to_string());

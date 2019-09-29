@@ -61,23 +61,23 @@ pirates = ["scaleplate", "hatikvah", "atlas", "sovsyn" , "cartel", "strongarms",
 
 [xlconfig]
 #purpose
-trade_purposemod = 1
-fight_purposemod = 1
-build_purposemod = 1
+trade_purposemod = 0.1
+fight_purposemod = 1.5
+build_purposemod = 0.5
 mine_purposemod = 1
-auxiliary_purposemod= 1
-#physics
+auxiliary_purposemod= 3.1
+#physics - min and max CANNOT be the same value
 mass= [549, 5049]
-i_pitch= [617, 617]
-i_yaw= [617, 317]
-i_roll= [493, 493]
-forward= [189, 189]
-reverse= [759, 759]
-horizontal= [259, 259]
-vertical= [259, 259]
-d_pitch= [809, 809]
-d_yaw= [809, 809]
-d_roll= [809, 809]
+i_pitch= [617, 618]
+i_yaw= [617, 618]
+i_roll= [493, 494]
+forward= [189, 190]
+reverse= [759, 760]
+horizontal= [259, 260]
+vertical= [259, 260]
+d_pitch= [100, 810]
+d_yaw= [100, 810]
+d_roll= [100, 810]
 #stats
 explosion = [1, 5]
 ammo = [100, 1000]
