@@ -99,6 +99,7 @@ struct Properties {
     hull: Hull,
     storage: Ammo,
     people: People,
+    explosiondamage: Explosion,
 }
 #[derive(Deserialize, Debug, Default)]
 struct Identification {
@@ -117,6 +118,10 @@ struct Ammo {
 #[derive(Deserialize, Debug, Default)]
 struct People {
     capacity: String,
+}
+#[derive(Deserialize, Debug, Default)]
+struct Explosion {
+    value: String,
 }
 #[derive(Deserialize, Debug, Default)]
 struct Purpose {
@@ -612,6 +617,14 @@ fn main() {
             let pattern = &macro_parsed.r#macro.properties.people.capacity;
             if pattern != "" {
                 macro_string = macro_string.replace(pattern, &people.to_string());
+            }
+            // explosion choose, modify and replace
+            let min = &toml_parsed.xlconfig.explosion[0];
+            let max = &toml_parsed.xlconfig.explosion[1];
+            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = &macro_parsed.r#macro.properties.explosiondamage.value;
+            if pattern != "" {
+                macro_string = macro_string.replace(pattern, &explosion.to_string());
             }
             let mut small = 0;
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
