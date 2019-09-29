@@ -28,6 +28,7 @@ struct Config {
     out_path: String,
     pageid: String,
     variant_tname: String,
+    mod_name: String,
 }
 #[derive(Deserialize, Debug, Default, Clone)]
 struct Factions {
@@ -217,7 +218,6 @@ fn main() {
     let mut macro_relations = HashMap::new();
 
     // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
-    // TODO fix index path info for proper Extensions mod folder
     for entry in fs::read_dir(&toml_parsed.config.xl_dir_path).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
@@ -234,9 +234,9 @@ fn main() {
 
             if macro_string.contains("class=\"storage\"") == true {
                 let namecombo = &macroname
-                    .replace(".xml", "")
-                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
-                i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
 
             if toml_parsed.config.varbool == true {
@@ -246,7 +246,7 @@ fn main() {
                         .replace(".xml", "")
                         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
                     macro_string = replace_pattern(pattern, &macro_string, namecombo);
-                    i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
+                    i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.name;
                 if pattern != "" {
@@ -525,11 +525,12 @@ fn main() {
                 small = min_and_value;
                 // replace name
                 let namecombo = &macroname
-                    .replace(".xml", "")
-                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
-                    .replace("ship", "shipstorage");
-                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
-                i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
+                        .replace("ship", "shipstorage");
+                macro_string = macro_string.replace(
+                    "shipstorage_gen_s_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
             let mut medium = 0;
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
@@ -539,11 +540,12 @@ fn main() {
                 medium = min_and_value;
                 //  replace name
                 let namecombo = &macroname
-                    .replace(".xml", "")
-                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
-                    .replace("ship", "shipstorage");
-                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
-                i_string.push_str(&i_add(namecombo.to_string(), m_out_path.to_string()));
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
+                        .replace("ship", "shipstorage");
+                macro_string = macro_string.replace(
+                    "shipstorage_gen_s_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
             // table!
             macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
@@ -820,6 +822,6 @@ fn get_tfile_value(id_tfile: &String, unwrapped_tfile: &str) -> String {
 }
 
 fn i_add(macroname: String, folderpath: String) -> String {
-    let i_add_value = format!("<entry name=\"{}\" value=\"{}{}\" />\n", macroname, folderpath, macroname);
+    let i_add_value = format!("<entry name=\"{}\" value=\"{}\\{}\" />\n", macroname, folderpath, macroname);
     i_add_value.to_string()
 }
