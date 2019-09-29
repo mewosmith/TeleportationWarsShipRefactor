@@ -844,7 +844,7 @@ fn makeshipstorage(toml_parsed: &Toml, m_out_path: &String, macroname: &String, 
         "{}{}",
         &m_out_path,
         &macroname
-            .replace("storage", "shipstorage_small")
+            .replace("storage", "shipstorage")
             .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), size.as_str(), "_macro"].concat())
     ))
     .unwrap();
