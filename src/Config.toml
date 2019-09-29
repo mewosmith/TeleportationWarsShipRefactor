@@ -9,6 +9,7 @@ s_dir_path = "D:/x4_extract_2.6/assets/units/size_s/macros"
 ware_path = "D:/x4_extract_2.6/libraries/wares.xml"
 t_path = "D:/x4_extract_2.6/t/0001-l044.xml"
 out_path ="C:/Users/alby/Desktop/tpwar_targets/tpwar_ship_target/"
+mod_name = "Extensions\\Rust Output\\macros"
 # t
 pageid = "20957250"
 
