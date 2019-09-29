@@ -308,16 +308,16 @@ fn main() {
             let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
 
             //
-            let i_pitch = "";
-            let i_yaw = "";
-            let i_roll = "";
-            let forward = "";
-            let reverse = "";
-            let horizontal = "";
-            let vertical = "";
-            let d_pitch = "";
-            let d_yaw = "";
-            let d_roll = "";
+            let mut i_pitch = 0;
+            let mut i_yaw = 0;
+            let mut i_roll = 0;
+            let mut forward = 0;
+            let mut reverse = 0;
+            let mut horizontal = 0;
+            let mut vertical = 0;
+            let mut d_pitch = 0;
+            let mut d_yaw = 0;
+            let mut d_roll = 0;
 
             // let cargo = "";
             // let cargo = "";
@@ -537,7 +537,36 @@ fn main() {
             hull = hull * purpose_mod;
             mass = mass * purpose_mod;
             // TODO set physics + modify all values by purpose_mod
-            
+            let min = &toml_parsed.xlconfig.i_pitch[0];
+            let max = &toml_parsed.xlconfig.i_pitch[1];
+            i_pitch = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.i_yaw[0];
+            let max = &toml_parsed.xlconfig.i_yaw[1];
+            i_yaw = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.i_roll[0];
+            let max = &toml_parsed.xlconfig.i_roll[1];
+            i_roll = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.forward[0];
+            let max = &toml_parsed.xlconfig.forward[1];
+            forward = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.reverse[0];
+            let max = &toml_parsed.xlconfig.reverse[1];
+            reverse = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.horizontal[0];
+            let max = &toml_parsed.xlconfig.horizontal[1];
+            horizontal = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.vertical[0];
+            let max = &toml_parsed.xlconfig.vertical[1];
+            vertical = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.d_pitch[0];
+            let max = &toml_parsed.xlconfig.d_pitch[1];
+            d_pitch = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.d_yaw[0];
+            let max = &toml_parsed.xlconfig.d_yaw[1];
+            d_yaw = return_min_and_value(*min, *max) * purpose_mod;
+            let min = &toml_parsed.xlconfig.d_roll[0];
+            let max = &toml_parsed.xlconfig.d_roll[1];
+            d_roll = return_min_and_value(*min, *max) * purpose_mod;
             let physics = format!(
                 "<physics mass=\"{}\">
         <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
