@@ -96,6 +96,7 @@ struct Properties {
     identification: Identification,
     purpose: Purpose,
     hull: Hull,
+    storage: Ammo,
 }
 #[derive(Deserialize, Debug, Default)]
 struct Identification {
@@ -105,6 +106,11 @@ struct Identification {
     variation: String,
     shortvariation: String,
     icon: String,
+}
+#[derive(Deserialize, Debug, Default)]
+struct Ammo {
+    missile: String,
+    unit: String,
 }
 #[derive(Deserialize, Debug, Default)]
 struct Purpose {
@@ -296,9 +302,10 @@ fn main() {
             let mut hull = 0;
             let mut rarity = 0;
             // second order
-            let ammo = "";
-            let hangarcapacity = "";
-            let people = "";
+            let mut ammo = 0;
+            let mut unit = 0;
+            let hangarcapacity = ""; // not used since we do small and medium separately
+            let mut people = 0;
 
             //
             let i_pitch = "";
@@ -348,7 +355,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
                 if mass >= average {
@@ -392,7 +399,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -436,7 +443,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -480,7 +487,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -534,14 +541,28 @@ fn main() {
             // hull replace
             let pattern = &macro_parsed.r#macro.properties.hull.max;
             if pattern != "" {
-                replace_pattern(&pattern, &macro_string, &hull.to_string());
+                macro_string = macro_string.replace(pattern, &hull.to_string());
+            }
+            // ammo choose and replace
+            let min = &toml_parsed.xlconfig.ammo[0];
+            let max = &toml_parsed.xlconfig.ammo[1];
+            ammo = return_min_and_value(*min, *max);
+            let pattern = &macro_parsed.r#macro.properties.storage.missile;
+            if pattern != "" {
+                macro_string = macro_string.replace(pattern, &ammo.to_string());
+            }
+            let min = &toml_parsed.xlconfig.unit[0];
+            let max = &toml_parsed.xlconfig.unit[1];
+            unit = return_min_and_value(*min, *max);
+            let pattern = &macro_parsed.r#macro.properties.storage.unit;
+            if pattern != "" {
+                macro_string = macro_string.replace(pattern, &unit.to_string());
             }
             let mut small = 0;
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
                 let min = &toml_parsed.xlconfig.hangarcapacity[0];
                 let max = &toml_parsed.xlconfig.hangarcapacity[1];
-                let min_and_value = return_min_and_value(*min, *max);
-                small = min_and_value;
+                small = return_min_and_value(*min, *max);
                 // replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -554,8 +575,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
                 let min = &toml_parsed.xlconfig.hangarcapacity[2];
                 let max = &toml_parsed.xlconfig.hangarcapacity[3];
-                let min_and_value = return_min_and_value(*min, *max);
-                medium = min_and_value;
+                medium = return_min_and_value(*min, *max);
                 //  replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -734,7 +754,7 @@ fn ownership(owners: rand::seq::SliceChooseIter<'_, [std::string::String], std::
     for owner in owners {
         if owners_vec.contains(owner) == false {
             owner_string.push_str(&format!("\n    <owner faction=\"{}\"/>", owner));
-            println!("{}", owner_string);
+            // println!("{}", owner_string);
             owners_vec.push(owner.to_string())
         }
     }
