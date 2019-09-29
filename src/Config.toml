@@ -12,6 +12,15 @@ out_path ="C:/Users/alby/Desktop/tpwar_targets/tpwar_ship_target/"
 # t
 pageid = "20957250"
 
+#racial faction deff
+[faction_vec]
+argon = ["argon", "antigone", "pasta", "sauce", "pizza"]
+teladi = ["teladi", "ministry"]
+paranid = ["paranid", "holyorder"]
+xenon = ["xenon", ""]
+khaak = ["khaak"]
+pirates = ["scaleplate", "hatikvah"]
+
 
 #TODO
 # - write an explanantion of the physics properties
