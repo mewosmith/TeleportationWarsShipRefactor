@@ -53,6 +53,7 @@ struct xl_config {
     hull: Vec<i32>,
     cargo: Vec<i32>,
     // second order
+    people: Vec<i32>,
     hangarcapacity: Vec<i32>,
     unit: Vec<i32>,
     ammo: Vec<i32>,
@@ -97,6 +98,7 @@ struct Properties {
     purpose: Purpose,
     hull: Hull,
     storage: Ammo,
+    people: People,
 }
 #[derive(Deserialize, Debug, Default)]
 struct Identification {
@@ -111,6 +113,10 @@ struct Identification {
 struct Ammo {
     missile: String,
     unit: String,
+}
+#[derive(Deserialize, Debug, Default)]
+struct People {
+    capacity: String,
 }
 #[derive(Deserialize, Debug, Default)]
 struct Purpose {
@@ -562,15 +568,13 @@ fn main() {
             let min = &toml_parsed.xlconfig.d_pitch[0];
             let max = &toml_parsed.xlconfig.d_pitch[1];
             d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            // println!("PITCH macro: {} min: {}, max: {}, value: {}, purpose: {}", macroname, min, max, d_pitch, purpose_mod);
             let min = &toml_parsed.xlconfig.d_yaw[0];
             let max = &toml_parsed.xlconfig.d_yaw[1];
             d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            // println!("YAW macro: {} min: {}, max: {}, value: {}, purpose: {}", macroname, min, max, d_yaw, purpose_mod);
             let min = &toml_parsed.xlconfig.d_roll[0];
             let max = &toml_parsed.xlconfig.d_roll[1];
             d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            // println!("ROLL macro: {} min: {}, max: {}, value: {}, purpose: {}", macroname, min, max, d_roll, purpose_mod);
+            // sometimes this borks out - d_values were outputting values 10x what was calculated above
             let physics = format!(
                 "<physics mass=\"{}\">
         <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
@@ -601,11 +605,19 @@ fn main() {
             if pattern != "" {
                 macro_string = macro_string.replace(pattern, &unit.to_string());
             }
+            // people choose, modify and replace
+            let min = &toml_parsed.xlconfig.people[0];
+            let max = &toml_parsed.xlconfig.people[1];
+            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = &macro_parsed.r#macro.properties.people.capacity;
+            if pattern != "" {
+                macro_string = macro_string.replace(pattern, &people.to_string());
+            }
             let mut small = 0;
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
                 let min = &toml_parsed.xlconfig.hangarcapacity[0];
                 let max = &toml_parsed.xlconfig.hangarcapacity[1];
-                small = return_min_and_value(*min, *max);
+                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 // replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -618,7 +630,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
                 let min = &toml_parsed.xlconfig.hangarcapacity[2];
                 let max = &toml_parsed.xlconfig.hangarcapacity[3];
-                medium = return_min_and_value(*min, *max);
+                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 //  replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
