@@ -348,7 +348,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
                 if mass >= average {
@@ -392,7 +392,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -436,7 +436,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -480,7 +480,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
-                let mass = return_min_and_value(*min, *max);
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -533,7 +533,7 @@ fn main() {
             // hull replace
             let pattern = &macro_parsed.r#macro.properties.hull.max;
             if pattern != "" {
-                replace_pattern(&pattern, &macro_string, &hull.to_string());
+                macro_string = macro_string.replace(pattern, &hull.to_string());
             }
             let mut small = 0;
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
