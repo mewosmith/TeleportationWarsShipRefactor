@@ -234,8 +234,8 @@ fn main() {
 
             if macro_string.contains("class=\"storage\"") == true {
                 let namecombo = &macroname
-                        .replace(".xml", "")
-                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
                 i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
 
@@ -543,11 +543,10 @@ fn main() {
                 small = min_and_value;
                 // replace name
                 let namecombo = &macroname
-                        .replace(".xml", "")
-                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
-                        .replace("ship", "shipstorage");
-                macro_string = macro_string.replace(
-                    "shipstorage_gen_s_01_macro", namecombo);
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
                 i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
             let mut medium = 0;
@@ -558,11 +557,10 @@ fn main() {
                 medium = min_and_value;
                 //  replace name
                 let namecombo = &macroname
-                        .replace(".xml", "")
-                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
-                        .replace("ship", "shipstorage");
-                macro_string = macro_string.replace(
-                    "shipstorage_gen_s_01_macro", namecombo);
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
                 i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
             // table!
@@ -570,6 +568,18 @@ fn main() {
 
             if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
                 // oh this is either really smart or really dumb
+                let re = Regex::new("<cargo max=\".*\" ta").unwrap();
+
+                macro_string = re
+                    .replace(
+                        &macro_string,
+                        format!(
+                            "<cargo max=\"{}\" ta",
+                            macro_relations.get(&macroname.replace("storage", "ship")).unwrap().0.as_str()
+                        )
+                        .as_str(),
+                    )
+                    .to_string();
 
                 let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
                 if medium > &0 {
@@ -604,23 +614,6 @@ fn main() {
                     let re = Regex::new("<price.* />").unwrap();
                     let mut ware_new = re.replace(&ware_new, ware_price.as_str()).into_owned();
 
-                    // let pattern = &ware_parsed.component.r#ref;
-                    // if pattern != "" {
-                    //     println!("{}", pattern);
-                    //     ware_new = replace_pattern(
-                    //         &pattern,
-                    //         &ware_new,
-                    //         &macroname
-                    //             .replace(".xml", "")
-                    //             .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat()),
-                    //     );
-                    //     println!(
-                    //         "{}",
-                    //         &macroname
-                    //             .replace(".xml", "")
-                    //             .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
-                    //     );
-                    // }
                     //##############################################
                     // VARAINT!
                     //##############################################
@@ -633,18 +626,8 @@ fn main() {
                                 &macroname.replace(".xml", "").replace("_macro", &toml_parsed.config.variant_name.as_str()),
                             );
                         }
-                        //////factions
-                        // 1. how many factions can own a ship. can we randomize it?
-                        //      a. iter over vec added to by high rolls?
-                        //      b. choose random n and match to something?
-                        //      c. rarity # sockets
-                        //          1. rarity calc from what?
-                        //              a. # of bad rolls -> rarity !
-                        //              b. % of .. -> rarity
-                        //          2. can we do some distinction of rarity of factions? no.
-                        ////
-                        //
-                        let rarity = 5;
+
+                        let rarity = rarity as usize + 2;
                         let pattern = &ware_parsed.owner.faction;
 
                         if pattern != "" {
@@ -652,42 +635,54 @@ fn main() {
                                 if pattern == faction {
                                     let owner_string = &ownership(toml_parsed.faction_vec.argon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
                                     let re = Regex::new("<owner.* />").unwrap();
-                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
                                 }
                             }
                             for faction in toml_parsed.faction_vec.teladi.iter() {
                                 if pattern == faction {
                                     let owner_string = &ownership(toml_parsed.faction_vec.teladi.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
                                     let re = Regex::new("<owner.* />").unwrap();
-                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
                                 }
                             }
                             for faction in toml_parsed.faction_vec.paranid.iter() {
                                 if pattern == faction {
                                     let owner_string = &ownership(toml_parsed.faction_vec.paranid.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
                                     let re = Regex::new("<owner.* />").unwrap();
-                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
                                 }
                             }
                             for faction in toml_parsed.faction_vec.xenon.iter() {
                                 if pattern == faction {
                                     let owner_string = &ownership(toml_parsed.faction_vec.xenon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
                                     let re = Regex::new("<owner.* />").unwrap();
-                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
                                 }
                             }
                             for faction in toml_parsed.faction_vec.khaak.iter() {
                                 if pattern == faction {
                                     let owner_string = &ownership(toml_parsed.faction_vec.khaak.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
                                     let re = Regex::new("<owner.* />").unwrap();
-                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
                                 }
                             }
                             for faction in toml_parsed.faction_vec.pirates.iter() {
                                 if pattern == faction {
                                     let owner_string = &ownership(toml_parsed.faction_vec.pirates.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
                                     let re = Regex::new("<owner.* />").unwrap();
-                                    ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
                                 }
                             }
                         }
@@ -849,8 +844,7 @@ fn get_rarity_float(value: f32, min: f32, max: f32) -> f32 {
     let mut rarity_float: f32 = 0.0;
     if value > average {
         rarity_float = (value - average) / (max - average)
-    }
-    else if value < average {
+    } else if value < average {
         rarity_float = (value - average) / (average - min)
     }
     // println!("value: {}, min: {}, average {}, max {}, float: {}", value, min, average, max, rarity_float);
@@ -862,17 +856,13 @@ fn set_rarity(cargo: f32, hull: f32, mass: f32) -> i32 {
     let average = (cargo + hull - mass) / 3.0;
     if average < -0.6 {
         rarity = 5
-    }
-    else if average < -0.2 {
+    } else if average < -0.2 {
         rarity = 4
-    }
-    else if average < 0.2 {
+    } else if average < 0.2 {
         rarity = 3
-    }
-    else if average < 0.4 {
+    } else if average < 0.4 {
         rarity = 2
-    }
-    else {
+    } else {
         rarity = 1
     }
     rarity

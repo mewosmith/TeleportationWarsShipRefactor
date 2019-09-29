@@ -15,12 +15,12 @@ pageid = "20957250"
 
 #racial faction deff
 [faction_vec]
-argon = ["argon", "antigone", "pasta", "sauce", "pizza", "bill", "george", "jack", "jeff", "fred"]
-teladi = ["teladi", "ministry"]
-paranid = ["paranid", "holyorder"]
-xenon = ["xenon", ""]
-khaak = ["khaak"]
-pirates = ["scaleplate", "hatikvah"]
+argon = ["argon", "antigone", "agi", "goner", "wholefood", "ledda", "aldrin", "cantera", "toride", "jonferson", "plutarch", "terracorp", "beryll", "fred", "terrapmc", "otas", "terrans","yaki","usc","heartofalbion","sonraenergy"]
+teladi = ["teladi", "ministry", "telunion","nmmc", "atreus", "ptni", "franton", "chow", "uguras" ]
+paranid = ["paranid", "holyorder", "buccaneers","heretics"]
+xenon = ["xenon", "xenonmatrix"]
+khaak = ["khaak", "khaakpox"]
+pirates = ["scaleplate", "hatikvah", "atlas", "sovsyn" , "cartel", "strongarms", "plutarch","terracorp", "beryll", "terrapmc", "reivers", "nolimits", "uguras","yaki"]
 
 
 #TODO
