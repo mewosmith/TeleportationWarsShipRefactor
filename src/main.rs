@@ -294,6 +294,7 @@ fn main() {
             let mut cargo = 0;
             let mut mass = 0;
             let mut hull = 0;
+            let mut rarity = 0;
             // second order
             let ammo = "";
             let hangarcapacity = "";
@@ -348,46 +349,51 @@ fn main() {
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
                 let mass = return_min_and_value(*min, *max);
-                if mass >= min + max / 2 {
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                let average = (min + max) / 2;
+                if mass >= average {
                     greater_than_average = true;
                 }
                 // cargo // done
                 let mut min = &toml_parsed.xlconfig.cargo[0];
                 let mut max = &toml_parsed.xlconfig.cargo[1];
-                let average = min + max / 2;
+                let average = (min + max) / 2;
                 if greater_than_average == true {
                     min = &average;
                 } else {
                     max = &average
                 }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                cargo = return_min_and_value(*min, *max);
-
                 // hull
                 let mut min = &toml_parsed.xlconfig.hull[0];
                 let mut max = &toml_parsed.xlconfig.hull[1];
-                let average = min + max / 2;
+                let average = (min + max) / 2;
                 if greater_than_average == true {
                     max = &average;
                 } else {
                     min = &average
                 }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                hull = return_min_and_value(*min, *max);
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "fight" {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
                 let mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
                 }
@@ -400,12 +406,13 @@ fn main() {
                 } else {
                     max = &average
                 }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                cargo = return_min_and_value(*min, *max);
 
                 // hull
                 let mut min = &toml_parsed.xlconfig.hull[0];
@@ -416,18 +423,21 @@ fn main() {
                 } else {
                     min = &average
                 }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                hull = return_min_and_value(*min, *max);
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "trade" {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
                 let mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
                 }
@@ -440,12 +450,13 @@ fn main() {
                 } else {
                     max = &average
                 }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                cargo = return_min_and_value(*min, *max);
 
                 // hull
                 let mut min = &toml_parsed.xlconfig.hull[0];
@@ -456,18 +467,21 @@ fn main() {
                 } else {
                     min = &average
                 }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                hull = return_min_and_value(*min, *max);
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "auxiliary" {
                 //mass // done
                 let min = &toml_parsed.xlconfig.mass[0];
                 let max = &toml_parsed.xlconfig.mass[1];
                 let mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
                 }
@@ -480,12 +494,13 @@ fn main() {
                 } else {
                     max = &average
                 }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                cargo = return_min_and_value(*min, *max);
 
                 // hull
                 let mut min = &toml_parsed.xlconfig.hull[0];
@@ -496,13 +511,16 @@ fn main() {
                 } else {
                     min = &average
                 }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
                 } else {
                     greater_than_average = false;
                 }
-                hull = return_min_and_value(*min, *max);
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
+            // println!("purpose: {}, rarity: {}", purpose, rarity);
             let physics = format!(
                 "<physics mass=\"{}\">
         <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
@@ -633,7 +651,7 @@ fn main() {
 
                             for faction in toml_parsed.faction_vec.argon.iter() {
                                 if pattern == faction {
-                                    println!("pattern: {} faction: {}", pattern, faction);
+                                    // println!("pattern: {} faction: {}", pattern, faction);
                                     let re = Regex::new("<owner.* />").unwrap();
                                     let mut owner_string = format!(
                                         "<owner faction=\"{}\"/>",
@@ -648,27 +666,27 @@ fn main() {
                             }
                             for faction in toml_parsed.faction_vec.teladi.iter() {
                                 if pattern == faction {
-                                    println!("pattern: {} faction: {}", pattern, faction)
+                                    // println!("pattern: {} faction: {}", pattern, faction)
                                 }
                             }
                             for faction in toml_parsed.faction_vec.paranid.iter() {
                                 if pattern == faction {
-                                    println!("pattern: {} faction: {}", pattern, faction)
+                                    // println!("pattern: {} faction: {}", pattern, faction)
                                 }
                             }
                             for faction in toml_parsed.faction_vec.xenon.iter() {
                                 if pattern == faction {
-                                    println!("pattern: {} faction: {}", pattern, faction)
+                                    // println!("pattern: {} faction: {}", pattern, faction)
                                 }
                             }
                             for faction in toml_parsed.faction_vec.khaak.iter() {
                                 if pattern == faction {
-                                    println!("pattern: {} faction: {}", pattern, faction)
+                                    // println!("pattern: {} faction: {}", pattern, faction)
                                 }
                             }
                             for faction in toml_parsed.faction_vec.pirates.iter() {
                                 if pattern == faction {
-                                    println!("pattern: {} faction: {}", pattern, faction)
+                                    // println!("pattern: {} faction: {}", pattern, faction)
                                 }
                             }
                         }
@@ -809,4 +827,38 @@ fn get_tfile_value(id_tfile: &String, unwrapped_tfile: &str) -> String {
 fn i_add(macroname: String, folderpath: String) -> String {
     let i_add_value = format!("<entry name=\"{}\" value=\"{}\\{}\" />\n", macroname, folderpath, macroname);
     i_add_value.to_string()
+}
+
+fn get_rarity_float(value: f32, min: f32, max: f32) -> f32 {
+    let average = (min + max) / 2.0;
+    let mut rarity_float: f32 = 0.0;
+    if value > average {
+        rarity_float = (value - average) / (max - average)
+    }
+    else if value < average {
+        rarity_float = (value - average) / (average - min)
+    }
+    // println!("value: {}, min: {}, average {}, max {}, float: {}", value, min, average, max, rarity_float);
+    rarity_float
+}
+
+fn set_rarity(cargo: f32, hull: f32, mass: f32) -> i32 {
+    let mut rarity: i32;
+    let average = (cargo + hull - mass) / 3.0;
+    if average < -0.6 {
+        rarity = 5
+    }
+    else if average < -0.2 {
+        rarity = 4
+    }
+    else if average < 0.2 {
+        rarity = 3
+    }
+    else if average < 0.4 {
+        rarity = 2
+    }
+    else {
+        rarity = 1
+    }
+    rarity
 }
