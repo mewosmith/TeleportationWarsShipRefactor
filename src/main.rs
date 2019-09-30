@@ -375,6 +375,16 @@ fn main() {
                 let re = "</software>";
                 macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
             }
+            //unit
+
+            if macro_string.contains("<storage") {
+                let re = Regex::new("<storage.* />").unwrap();
+                macro_string = re.replace(&macro_string, "<storage missile=\"\" unit=\"11111\" />").into_owned();
+            }
+            // else {
+            //     let re = "</software>";
+            //     macro_string = macro_string.replace(re, "</software>\n      unit= value=\"11111\" />");
+            // }
 
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
@@ -402,7 +412,6 @@ fn main() {
                     t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
                     //macro
                     macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
-                    println!("{} {}", macroname, &toml_parsed.config.pageid);
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.basename;
                 if pattern != "" {
@@ -584,7 +593,7 @@ fn main() {
                 }
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
-            if purpose == "trade" {
+            if purpose == "trade"   ||  purpose == "mine"{
                 purpose_mod = toml_parsed.xl_config.trade_purposemod;
                 //mass // done
                 let min = &toml_parsed.xl_config.mass[0];
@@ -678,7 +687,7 @@ fn main() {
             cargo = (cargo as f32 * purpose_mod) as i32;
             hull = (hull as f32 * purpose_mod) as i32;
             mass = (mass as f32 * purpose_mod) as i32;
-
+          
             // physics
             let min = &toml_parsed.xl_config.i_pitch[0];
             let max = &toml_parsed.xl_config.i_pitch[1];
@@ -981,7 +990,10 @@ fn main() {
                 let re = "</software>";
                 macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
             }
-
+            if macro_string.contains("<storage") {
+                let re = Regex::new("<storage.* />").unwrap();
+                macro_string = re.replace(&macro_string, "<storage missile=\"\" unit=\"11111\" />").into_owned();
+            }
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
 
@@ -1008,7 +1020,6 @@ fn main() {
                     t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
                     //macro
                     macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
-                    println!("{} {}", macroname, &toml_parsed.config.pageid);
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.basename;
                 if pattern != "" {
@@ -1106,6 +1117,7 @@ fn main() {
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
                 mass = return_min_and_value(*min, *max);
+                 println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
                 if mass >= average {
@@ -1151,6 +1163,7 @@ fn main() {
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
                 mass = return_min_and_value(*min, *max);
+                 println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -1190,12 +1203,13 @@ fn main() {
                 }
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
-            if purpose == "trade" {
+            if purpose == "trade" ||  purpose == "mine"{
                 purpose_mod = toml_parsed.l_config.trade_purposemod;
                 //mass // done
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
                 mass = return_min_and_value(*min, *max);
+                 println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -1241,6 +1255,7 @@ fn main() {
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
                 mass = return_min_and_value(*min, *max);
+                 println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -1281,9 +1296,13 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             // apply purpose modifier to first order values
+            // works
+            
             cargo = (cargo as f32 * purpose_mod) as i32;
             hull = (hull as f32 * purpose_mod) as i32;
             mass = (mass as f32 * purpose_mod) as i32;
+
+            // println!("mass OUT: {}, macro {}", mass, macroname);
 
             // physics
             let min = &toml_parsed.l_config.i_pitch[0];
@@ -1413,12 +1432,13 @@ fn main() {
             // );
             // table!
             macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
+            println!("try {}", &macroname);
             if macro_relations.contains_key(&macroname.replace("storage", "ship")) {
+            println!("pass {}", &macroname);
                 if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
                     // oh this is either really smart or really dumb
                     //cargo value
 
-                    println!("{:#?}", macro_string);
                     let re = Regex::new("<cargo max=\".*\" ta").expect("cargo max l");
                     macro_string = re
                         .replace(
@@ -1591,6 +1611,12 @@ fn main() {
                 let re = "</software>";
                 macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
             }
+            if macro_string.contains("<storage") {
+                let re = Regex::new("<storage.* />").unwrap();
+                macro_string = re.replace(&macro_string, "<storage missile=\"\" unit=\"11111\" />").into_owned();
+            }
+
+            //  <identification name="{,}" basename="{,}" description="{,}" variation="{,}" shortvariation="{,}"
 
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
@@ -1618,7 +1644,6 @@ fn main() {
                     t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
                     //macro
                     macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
-                    println!("{} {}", macroname, &toml_parsed.config.pageid);
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.basename;
                 if pattern != "" {
@@ -1800,7 +1825,7 @@ fn main() {
                 }
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
-            if purpose == "trade" {
+            if purpose == "trade"  ||  purpose == "mine" {
                 purpose_mod = toml_parsed.m_config.trade_purposemod;
                 //mass // done
                 let min = &toml_parsed.m_config.mass[0];
@@ -2189,7 +2214,9 @@ fn main() {
             tshort += 100;
             tname += 100;
             tdesc += 100;
+
             let mut macro_string = fs::read_to_string(&path).unwrap();
+            let macroname = &path.file_name().unwrap().to_str().unwrap();
             if macro_string.contains("explosiondamage") {
                 let re = Regex::new("(<explosiondamage.*\n)").unwrap();
                 macro_string = re.replace(&macro_string, "<explosiondamage value=\"11111\" />\n").into_owned();
@@ -2197,9 +2224,41 @@ fn main() {
                 let re = "</software>";
                 macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
             }
-
+            if macro_string.contains("<storage") {
+                let re = Regex::new("<storage.* />").unwrap();
+                macro_string = re.replace(&macro_string, "<storage missile=\"\" unit=\"11111\" />").into_owned();
+            }
+            let re = Regex::new("<identification name=\".*\"").unwrap();
+            if re.is_match(&macro_string) == false {
+               
+                
+            }
+            // PANICKS BECAUSE TFILE ISNT IN SET
+            let re = Regex::new("basename=\".*\"").unwrap();
+            if re.is_match(&macro_string) == false {
+              
+                let re = Regex::new("<identification").unwrap();
+                macro_string = re.replace(&macro_string,  "<identification basename=\"\"").into_owned();
+            }
+            let re = Regex::new("description=\".*\"").unwrap();
+            if re.is_match(&macro_string) == false {
+              
+                let re = Regex::new("<identification").unwrap();
+                macro_string = re.replace(&macro_string,  "<identification description=\"\"").into_owned();
+            }
+            let re = Regex::new("variation=\".*\"").unwrap();
+            if re.is_match(&macro_string) == false {
+              
+                let re = Regex::new("<identification").unwrap();
+                macro_string = re.replace(&macro_string,  "<identification variation=\"\"").into_owned();
+            }
+            let re = Regex::new("shortvariation=\".*\"").unwrap();
+            if re.is_match(&macro_string) == false {
+                
+                let re = Regex::new("<identification").unwrap();
+                macro_string = re.replace(&macro_string,  "<identification shortvariation=\"\"").into_owned();
+            }
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
-            let macroname = &path.file_name().unwrap().to_str().unwrap();
 
             if macro_string.contains("class=\"storage\"") == true {
                 let namecombo = &macroname
@@ -2224,7 +2283,6 @@ fn main() {
                     t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
                     //macro
                     macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
-                    println!("{} {}", macroname, &toml_parsed.config.pageid);
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.basename;
                 if pattern != "" {
@@ -2406,7 +2464,7 @@ fn main() {
                 }
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
-            if purpose == "trade" {
+            if purpose == "trade"  ||  purpose == "mine" {
                 purpose_mod = toml_parsed.s_config.trade_purposemod;
                 //mass // done
                 let min = &toml_parsed.s_config.mass[0];
