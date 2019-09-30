@@ -15,7 +15,10 @@ extern crate serde_xml_rs;
 #[derive(Deserialize, Debug, Default, Clone)]
 struct Toml {
     config: Config,
-    xlconfig: xl_config,
+    xl_config: xl_config,
+    l_config: l_config,
+    m_config: m_config,
+    s_config: s_config,
     faction_vec: Factions,
 }
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -23,6 +26,9 @@ struct Config {
     varbool: bool,
     variant_name: String,
     xl_dir_path: String,
+    l_dir_path: String,
+    m_dir_path: String,
+    s_dir_path: String,
     ware_path: String,
     t_path: String,
     out_path: String,
@@ -77,6 +83,111 @@ struct xl_config {
     d_roll: Vec<i32>,
 }
 
+#[derive(Deserialize, Debug, Default, Clone)]
+struct l_config {
+    trade_purposemod: f32,
+    fight_purposemod: f32,
+    build_purposemod: f32,
+    mine_purposemod: f32,
+    auxiliary_purposemod: f32,
+    //wareprice
+    min: Vec<i32>,
+    average: Vec<i32>,
+    max: Vec<i32>,
+    // first order
+    mass: Vec<i32>,
+    hull: Vec<i32>,
+    cargo: Vec<i32>,
+    // second order
+    people: Vec<i32>,
+    hangarcapacity: Vec<i32>,
+    unit: Vec<i32>,
+    ammo: Vec<i32>,
+    // idfk
+    explosion: Vec<i32>,
+
+    // movement
+    i_pitch: Vec<i32>,
+    i_yaw: Vec<i32>,
+    i_roll: Vec<i32>,
+    forward: Vec<i32>,
+    reverse: Vec<i32>,
+    horizontal: Vec<i32>,
+    vertical: Vec<i32>,
+    d_pitch: Vec<i32>,
+    d_yaw: Vec<i32>,
+    d_roll: Vec<i32>,
+}
+#[derive(Deserialize, Debug, Default, Clone)]
+struct m_config {
+    trade_purposemod: f32,
+    fight_purposemod: f32,
+    build_purposemod: f32,
+    mine_purposemod: f32,
+    auxiliary_purposemod: f32,
+    //wareprice
+    min: Vec<i32>,
+    average: Vec<i32>,
+    max: Vec<i32>,
+    // first order
+    mass: Vec<i32>,
+    hull: Vec<i32>,
+    cargo: Vec<i32>,
+    // second order
+    people: Vec<i32>,
+    hangarcapacity: Vec<i32>,
+    unit: Vec<i32>,
+    ammo: Vec<i32>,
+    // idfk
+    explosion: Vec<i32>,
+
+    // movement
+    i_pitch: Vec<i32>,
+    i_yaw: Vec<i32>,
+    i_roll: Vec<i32>,
+    forward: Vec<i32>,
+    reverse: Vec<i32>,
+    horizontal: Vec<i32>,
+    vertical: Vec<i32>,
+    d_pitch: Vec<i32>,
+    d_yaw: Vec<i32>,
+    d_roll: Vec<i32>,
+}
+#[derive(Deserialize, Debug, Default, Clone)]
+struct s_config {
+    trade_purposemod: f32,
+    fight_purposemod: f32,
+    build_purposemod: f32,
+    mine_purposemod: f32,
+    auxiliary_purposemod: f32,
+    //wareprice
+    min: Vec<i32>,
+    average: Vec<i32>,
+    max: Vec<i32>,
+    // first order
+    mass: Vec<i32>,
+    hull: Vec<i32>,
+    cargo: Vec<i32>,
+    // second order
+    people: Vec<i32>,
+    hangarcapacity: Vec<i32>,
+    unit: Vec<i32>,
+    ammo: Vec<i32>,
+    // idfk
+    explosion: Vec<i32>,
+
+    // movement
+    i_pitch: Vec<i32>,
+    i_yaw: Vec<i32>,
+    i_roll: Vec<i32>,
+    forward: Vec<i32>,
+    reverse: Vec<i32>,
+    horizontal: Vec<i32>,
+    vertical: Vec<i32>,
+    d_pitch: Vec<i32>,
+    d_yaw: Vec<i32>,
+    d_roll: Vec<i32>,
+}
 //
 // xml ship
 //
@@ -260,8 +371,7 @@ fn main() {
             if macro_string.contains("explosiondamage") {
                 let re = Regex::new("(<explosiondamage.*\n)").unwrap();
                 macro_string = re.replace(&macro_string, "<explosiondamage value=\"11111\" />\n").into_owned();
-            }
-            else {
+            } else {
                 let re = "</software>";
                 macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
             }
@@ -385,10 +495,10 @@ fn main() {
             //
             let mut greater_than_average = false;
             if purpose == "build" {
-                purpose_mod = toml_parsed.xlconfig.build_purposemod;
+                purpose_mod = toml_parsed.xl_config.build_purposemod;
                 //mass // done
-                let min = &toml_parsed.xlconfig.mass[0];
-                let max = &toml_parsed.xlconfig.mass[1];
+                let min = &toml_parsed.xl_config.mass[0];
+                let max = &toml_parsed.xl_config.mass[1];
                 mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
@@ -396,8 +506,8 @@ fn main() {
                     greater_than_average = true;
                 }
                 // cargo // done
-                let mut min = &toml_parsed.xlconfig.cargo[0];
-                let mut max = &toml_parsed.xlconfig.cargo[1];
+                let mut min = &toml_parsed.xl_config.cargo[0];
+                let mut max = &toml_parsed.xl_config.cargo[1];
                 let average = (min + max) / 2;
                 if greater_than_average == true {
                     min = &average;
@@ -412,8 +522,8 @@ fn main() {
                     greater_than_average = false;
                 }
                 // hull
-                let mut min = &toml_parsed.xlconfig.hull[0];
-                let mut max = &toml_parsed.xlconfig.hull[1];
+                let mut min = &toml_parsed.xl_config.hull[0];
+                let mut max = &toml_parsed.xl_config.hull[1];
                 let average = (min + max) / 2;
                 if greater_than_average == true {
                     max = &average;
@@ -430,18 +540,18 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "fight" {
-                purpose_mod = toml_parsed.xlconfig.fight_purposemod;
+                purpose_mod = toml_parsed.xl_config.fight_purposemod;
                 //mass // done
-                let min = &toml_parsed.xlconfig.mass[0];
-                let max = &toml_parsed.xlconfig.mass[1];
+                let min = &toml_parsed.xl_config.mass[0];
+                let max = &toml_parsed.xl_config.mass[1];
                 mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
                 }
                 // cargo // done
-                let mut min = &toml_parsed.xlconfig.cargo[0];
-                let mut max = &toml_parsed.xlconfig.cargo[1];
+                let mut min = &toml_parsed.xl_config.cargo[0];
+                let mut max = &toml_parsed.xl_config.cargo[1];
                 let average = min + max / 2;
                 if greater_than_average == true {
                     min = &average;
@@ -457,8 +567,8 @@ fn main() {
                 }
 
                 // hull
-                let mut min = &toml_parsed.xlconfig.hull[0];
-                let mut max = &toml_parsed.xlconfig.hull[1];
+                let mut min = &toml_parsed.xl_config.hull[0];
+                let mut max = &toml_parsed.xl_config.hull[1];
                 let average = min + max / 2;
                 if greater_than_average == true {
                     max = &average;
@@ -475,18 +585,18 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "trade" {
-                purpose_mod = toml_parsed.xlconfig.trade_purposemod;
+                purpose_mod = toml_parsed.xl_config.trade_purposemod;
                 //mass // done
-                let min = &toml_parsed.xlconfig.mass[0];
-                let max = &toml_parsed.xlconfig.mass[1];
+                let min = &toml_parsed.xl_config.mass[0];
+                let max = &toml_parsed.xl_config.mass[1];
                 mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
                 }
                 // cargo // done
-                let mut min = &toml_parsed.xlconfig.cargo[0];
-                let mut max = &toml_parsed.xlconfig.cargo[1];
+                let mut min = &toml_parsed.xl_config.cargo[0];
+                let mut max = &toml_parsed.xl_config.cargo[1];
                 let average = min + max / 2;
                 if greater_than_average == true {
                     min = &average;
@@ -502,8 +612,8 @@ fn main() {
                 }
 
                 // hull
-                let mut min = &toml_parsed.xlconfig.hull[0];
-                let mut max = &toml_parsed.xlconfig.hull[1];
+                let mut min = &toml_parsed.xl_config.hull[0];
+                let mut max = &toml_parsed.xl_config.hull[1];
                 let average = min + max / 2;
                 if greater_than_average == true {
                     max = &average;
@@ -520,18 +630,18 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             if purpose == "auxiliary" {
-                purpose_mod = toml_parsed.xlconfig.auxiliary_purposemod;
+                purpose_mod = toml_parsed.xl_config.auxiliary_purposemod;
                 //mass // done
-                let min = &toml_parsed.xlconfig.mass[0];
-                let max = &toml_parsed.xlconfig.mass[1];
+                let min = &toml_parsed.xl_config.mass[0];
+                let max = &toml_parsed.xl_config.mass[1];
                 mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
                 }
                 // cargo // done
-                let mut min = &toml_parsed.xlconfig.cargo[0];
-                let mut max = &toml_parsed.xlconfig.cargo[1];
+                let mut min = &toml_parsed.xl_config.cargo[0];
+                let mut max = &toml_parsed.xl_config.cargo[1];
                 let average = min + max / 2;
                 if greater_than_average == true {
                     min = &average;
@@ -547,8 +657,8 @@ fn main() {
                 }
 
                 // hull
-                let mut min = &toml_parsed.xlconfig.hull[0];
-                let mut max = &toml_parsed.xlconfig.hull[1];
+                let mut min = &toml_parsed.xl_config.hull[0];
+                let mut max = &toml_parsed.xl_config.hull[1];
                 let average = min + max / 2;
                 if greater_than_average == true {
                     max = &average;
@@ -570,35 +680,35 @@ fn main() {
             mass = (mass as f32 * purpose_mod) as i32;
 
             // physics
-            let min = &toml_parsed.xlconfig.i_pitch[0];
-            let max = &toml_parsed.xlconfig.i_pitch[1];
+            let min = &toml_parsed.xl_config.i_pitch[0];
+            let max = &toml_parsed.xl_config.i_pitch[1];
             i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.i_yaw[0];
-            let max = &toml_parsed.xlconfig.i_yaw[1];
+            let min = &toml_parsed.xl_config.i_yaw[0];
+            let max = &toml_parsed.xl_config.i_yaw[1];
             i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.i_roll[0];
-            let max = &toml_parsed.xlconfig.i_roll[1];
+            let min = &toml_parsed.xl_config.i_roll[0];
+            let max = &toml_parsed.xl_config.i_roll[1];
             i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.forward[0];
-            let max = &toml_parsed.xlconfig.forward[1];
+            let min = &toml_parsed.xl_config.forward[0];
+            let max = &toml_parsed.xl_config.forward[1];
             forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.reverse[0];
-            let max = &toml_parsed.xlconfig.reverse[1];
+            let min = &toml_parsed.xl_config.reverse[0];
+            let max = &toml_parsed.xl_config.reverse[1];
             reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.horizontal[0];
-            let max = &toml_parsed.xlconfig.horizontal[1];
+            let min = &toml_parsed.xl_config.horizontal[0];
+            let max = &toml_parsed.xl_config.horizontal[1];
             horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.vertical[0];
-            let max = &toml_parsed.xlconfig.vertical[1];
+            let min = &toml_parsed.xl_config.vertical[0];
+            let max = &toml_parsed.xl_config.vertical[1];
             vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.d_pitch[0];
-            let max = &toml_parsed.xlconfig.d_pitch[1];
+            let min = &toml_parsed.xl_config.d_pitch[0];
+            let max = &toml_parsed.xl_config.d_pitch[1];
             d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.d_yaw[0];
-            let max = &toml_parsed.xlconfig.d_yaw[1];
+            let min = &toml_parsed.xl_config.d_yaw[0];
+            let max = &toml_parsed.xl_config.d_yaw[1];
             d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let min = &toml_parsed.xlconfig.d_roll[0];
-            let max = &toml_parsed.xlconfig.d_roll[1];
+            let min = &toml_parsed.xl_config.d_roll[0];
+            let max = &toml_parsed.xl_config.d_roll[1];
             d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             // sometimes this borks out - d_values were outputting values 10x what was calculated above
             let physics = format!(
@@ -617,31 +727,31 @@ fn main() {
                 macro_string = macro_string.replace(&pattern, format!("hull max=\"{}\"", &hull.to_string()).as_str());
             }
             // ammo choose, modify and replace
-            let min = &toml_parsed.xlconfig.ammo[0];
-            let max = &toml_parsed.xlconfig.ammo[1];
+            let min = &toml_parsed.xl_config.ammo[0];
+            let max = &toml_parsed.xl_config.ammo[1];
             ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
             }
-            let min = &toml_parsed.xlconfig.unit[0];
-            let max = &toml_parsed.xlconfig.unit[1];
+            let min = &toml_parsed.xl_config.unit[0];
+            let max = &toml_parsed.xl_config.unit[1];
             unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
             }
             // people choose, modify and replace
-            let min = &toml_parsed.xlconfig.people[0];
-            let max = &toml_parsed.xlconfig.people[1];
+            let min = &toml_parsed.xl_config.people[0];
+            let max = &toml_parsed.xl_config.people[1];
             people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
             }
             // explosion choose, modify and replace
-            let min = &toml_parsed.xlconfig.explosion[0];
-            let max = &toml_parsed.xlconfig.explosion[1];
+            let min = &toml_parsed.xl_config.explosion[0];
+            let max = &toml_parsed.xl_config.explosion[1];
             let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
             let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
             if pattern != "" {
@@ -649,8 +759,8 @@ fn main() {
             }
             let mut small = 0;
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
-                let min = &toml_parsed.xlconfig.hangarcapacity[0];
-                let max = &toml_parsed.xlconfig.hangarcapacity[1];
+                let min = &toml_parsed.xl_config.hangarcapacity[0];
+                let max = &toml_parsed.xl_config.hangarcapacity[1];
                 small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 // replace name
                 let namecombo = &macroname
@@ -662,8 +772,8 @@ fn main() {
             }
             let mut medium = 0;
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
-                let min = &toml_parsed.xlconfig.hangarcapacity[2];
-                let max = &toml_parsed.xlconfig.hangarcapacity[3];
+                let min = &toml_parsed.xl_config.hangarcapacity[2];
+                let max = &toml_parsed.xl_config.hangarcapacity[3];
                 medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 //  replace name
                 let namecombo = &macroname
@@ -673,31 +783,31 @@ fn main() {
                 macro_string = macro_string.replace("shipstorage_gen_m_01_macro", namecombo);
                 i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
-            
+
             // storage name
-                // if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
-                let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
-                macro_string = replace_pattern(
-                    &pattern,
-                    &macro_string,
-                    &macroname
-                        .replace(".xml", "")
-                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
-                        .replace("ship", "storage"),
-                );
-                // // storage name
-                // let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
-                // macro_string = replace_pattern(
-                //     &pattern,
-                //     &macro_string,
-                //     &macroname
-                //         .replace(".xml", "")
-                //         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
-                //         .replace("ship", "storage"),
-                // );
+            // if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
+            let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            macro_string = replace_pattern(
+                &pattern,
+                &macro_string,
+                &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                    .replace("ship", "storage"),
+            );
+            // // storage name
+            // let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            // macro_string = replace_pattern(
+            //     &pattern,
+            //     &macro_string,
+            //     &macroname
+            //         .replace(".xml", "")
+            //         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+            //         .replace("ship", "storage"),
+            // );
             // table!
             macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
-        
+
             if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
                 // oh this is either really smart or really dumb
                 //cargo value
@@ -749,9 +859,12 @@ fn main() {
                     let mut prng = rand::thread_rng();
                     let ware_price = format!(
                         "<price min=\"{}\" average=\"{}\" max=\"{}\" />",
-                        randomize(prng.gen_range(toml_parsed.xlconfig.min[0] as f32, toml_parsed.xlconfig.min[1] as f32), 1),
-                        randomize(prng.gen_range(toml_parsed.xlconfig.average[0] as f32, toml_parsed.xlconfig.average[1] as f32), 1),
-                        randomize(prng.gen_range(toml_parsed.xlconfig.max[0] as f32, toml_parsed.xlconfig.max[1] as f32), 1)
+                        randomize(prng.gen_range(toml_parsed.xl_config.min[0] as f32, toml_parsed.xl_config.min[1] as f32), 1),
+                        randomize(
+                            prng.gen_range(toml_parsed.xl_config.average[0] as f32, toml_parsed.xl_config.average[1] as f32),
+                            1
+                        ),
+                        randomize(prng.gen_range(toml_parsed.xl_config.max[0] as f32, toml_parsed.xl_config.max[1] as f32), 1)
                     );
                     let re = Regex::new("<price.* />").unwrap();
                     let mut ware_new = re.replace(&ware_new, ware_price.as_str()).into_owned();
@@ -850,7 +963,1828 @@ fn main() {
             output(&m_out_path, &path, &toml_parsed.config.variant_name, &macro_string);
         }
     }
+    // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
+    for entry in fs::read_dir(&toml_parsed.config.l_dir_path).unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if !path.is_dir() {
+            tbase += 100;
+            tvar += 100;
+            tshort += 100;
+            tname += 100;
+            tdesc += 100;
+            let mut macro_string = fs::read_to_string(&path).unwrap();
+            if macro_string.contains("explosiondamage") {
+                let re = Regex::new("(<explosiondamage.*\n)").unwrap();
+                macro_string = re.replace(&macro_string, "<explosiondamage value=\"11111\" />\n").into_owned();
+            } else {
+                let re = "</software>";
+                macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
+            }
 
+            let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
+            let macroname = &path.file_name().unwrap().to_str().unwrap();
+
+            if macro_string.contains("class=\"storage\"") == true {
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+
+            if toml_parsed.config.varbool == true {
+                let pattern = &macro_parsed.r#macro.name;
+                if pattern != "" {
+                    let namecombo = &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                    macro_string = replace_pattern(pattern, &macro_string, namecombo);
+                    i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.name;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
+                    println!("{} {}", macroname, &toml_parsed.config.pageid);
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.basename;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tbase, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tbase.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.description;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tdesc, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tdesc.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.variation;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tvar, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tvar.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.shortvariation;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tshort, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tshort.to_string()));
+                }
+            }
+            // common macro stuff
+            // first order
+            let mut cargo = 0;
+            let mut mass = 0;
+            let mut hull = 0;
+            let mut rarity = 0;
+            // second order
+            let mut ammo = 0;
+            let mut unit = 0;
+            let hangarcapacity = ""; // not used since we do small and medium separately
+            let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
+
+            //
+            let mut i_pitch = 0;
+            let mut i_yaw = 0;
+            let mut i_roll = 0;
+            let mut forward = 0;
+            let mut reverse = 0;
+            let mut horizontal = 0;
+            let mut vertical = 0;
+            let mut d_pitch = 0;
+            let mut d_yaw = 0;
+            let mut d_roll = 0;
+
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            let purpose = &macro_parsed.r#macro.properties.purpose.primary;
+            let mut purpose_mod = 0.6;
+            // println!("purpose {}", purpose);
+            /*
+
+            might.. want to check the odd assumption.... but hey 50/50... right?
+            these ifs determine the ordered values and should eventually contain some unique logic beyond order
+            a few points about the ordering:
+            1. the order function should not be applied second order values as it loses its influence in longer chains of values.
+                a. cargo can roll high to enforce a high mass which in turn can roll an essentially random hull
+                b. a + or - values could be propagated through the chain by changing the average calculation to consider the min's
+                    position relative to its range in min_and_value
+            2. it would be fairly simple to add look ahead or look behind as some form of deterministic mechanism.
+            3. rarity is derivable from the first order values.
+                a. rarity can be split by tpwar faction type: major, minor, landed, aux, explore
+                b. not sure how good it would be to split rarity by faction category: pirate, mercenary, trader, zealot, scavenger
+            4.  the second order values are: ammo, people, hangarcapacity. the method described in 1.b might be the best method
+            5. see toml comment on ordering for details
+
+            purpose, mass, hull, ammo
+            */
+
+            // return_min_and_value
+            // if value <= average
+            // then min = average
+            //
+            let mut greater_than_average = false;
+            if purpose == "build" {
+                purpose_mod = toml_parsed.l_config.build_purposemod;
+                //mass // done
+                let min = &toml_parsed.l_config.mass[0];
+                let max = &toml_parsed.l_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                let average = (min + max) / 2;
+                if mass >= average {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.l_config.cargo[0];
+                let mut max = &toml_parsed.l_config.cargo[1];
+                let average = (min + max) / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                // hull
+                let mut min = &toml_parsed.l_config.hull[0];
+                let mut max = &toml_parsed.l_config.hull[1];
+                let average = (min + max) / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "fight" {
+                purpose_mod = toml_parsed.l_config.fight_purposemod;
+                //mass // done
+                let min = &toml_parsed.l_config.mass[0];
+                let max = &toml_parsed.l_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.l_config.cargo[0];
+                let mut max = &toml_parsed.l_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.l_config.hull[0];
+                let mut max = &toml_parsed.l_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "trade" {
+                purpose_mod = toml_parsed.l_config.trade_purposemod;
+                //mass // done
+                let min = &toml_parsed.l_config.mass[0];
+                let max = &toml_parsed.l_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.l_config.cargo[0];
+                let mut max = &toml_parsed.l_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.l_config.hull[0];
+                let mut max = &toml_parsed.l_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "auxiliary" {
+                purpose_mod = toml_parsed.l_config.auxiliary_purposemod;
+                //mass // done
+                let min = &toml_parsed.l_config.mass[0];
+                let max = &toml_parsed.l_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.l_config.cargo[0];
+                let mut max = &toml_parsed.l_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.l_config.hull[0];
+                let mut max = &toml_parsed.l_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            // apply purpose modifier to first order values
+            cargo = (cargo as f32 * purpose_mod) as i32;
+            hull = (hull as f32 * purpose_mod) as i32;
+            mass = (mass as f32 * purpose_mod) as i32;
+
+            // physics
+            let min = &toml_parsed.l_config.i_pitch[0];
+            let max = &toml_parsed.l_config.i_pitch[1];
+            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.i_yaw[0];
+            let max = &toml_parsed.l_config.i_yaw[1];
+            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.i_roll[0];
+            let max = &toml_parsed.l_config.i_roll[1];
+            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.forward[0];
+            let max = &toml_parsed.l_config.forward[1];
+            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.reverse[0];
+            let max = &toml_parsed.l_config.reverse[1];
+            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.horizontal[0];
+            let max = &toml_parsed.l_config.horizontal[1];
+            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.vertical[0];
+            let max = &toml_parsed.l_config.vertical[1];
+            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.d_pitch[0];
+            let max = &toml_parsed.l_config.d_pitch[1];
+            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.d_yaw[0];
+            let max = &toml_parsed.l_config.d_yaw[1];
+            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.l_config.d_roll[0];
+            let max = &toml_parsed.l_config.d_roll[1];
+            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            // sometimes this borks out - d_values were outputting values 10x what was calculated above
+            let physics = format!(
+                "<physics mass=\"{}\">
+        <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
+        <drag forward=\"{}\" reverse=\"{}\" horizontal=\"{}\" vertical=\"{}\" pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
+      </physics>",
+                mass, i_pitch, i_yaw, i_roll, forward, reverse, horizontal, vertical, d_pitch, d_yaw, d_roll
+            );
+            let re = Regex::new("((?s)<physics.*</physics>)").unwrap();
+            macro_string = re.replace(&macro_string, physics.as_str()).into_owned();
+            // storage and shipstorage
+            // hull replace
+            let pattern = format!("hull max=\"{}\"", &macro_parsed.r#macro.properties.hull.max);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("hull max=\"{}\"", &hull.to_string()).as_str());
+            }
+            // ammo choose, modify and replace
+            let min = &toml_parsed.l_config.ammo[0];
+            let max = &toml_parsed.l_config.ammo[1];
+            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
+            }
+            let min = &toml_parsed.l_config.unit[0];
+            let max = &toml_parsed.l_config.unit[1];
+            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
+            }
+            // people choose, modify and replace
+            let min = &toml_parsed.l_config.people[0];
+            let max = &toml_parsed.l_config.people[1];
+            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
+            }
+            // explosion choose, modify and replace
+            let min = &toml_parsed.l_config.explosion[0];
+            let max = &toml_parsed.l_config.explosion[1];
+            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
+            }
+            let mut small = 0;
+            if macro_string.contains("shipstorage_gen_s_01_macro") == true {
+                let min = &toml_parsed.l_config.hangarcapacity[0];
+                let max = &toml_parsed.l_config.hangarcapacity[1];
+                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                // replace name
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+            let mut medium = 0;
+            if macro_string.contains("shipstorage_gen_m_01_macro") == true {
+                let min = &toml_parsed.l_config.hangarcapacity[2];
+                let max = &toml_parsed.l_config.hangarcapacity[3];
+                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                //  replace name
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_m_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+
+            // storage name
+            // if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
+            let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            macro_string = replace_pattern(
+                &pattern,
+                &macro_string,
+                &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                    .replace("ship", "storage"),
+            );
+            // // storage name
+            // let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            // macro_string = replace_pattern(
+            //     &pattern,
+            //     &macro_string,
+            //     &macroname
+            //         .replace(".xml", "")
+            //         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+            //         .replace("ship", "storage"),
+            // );
+            // table!
+            macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
+            if macro_relations.contains_key(&macroname.replace("storage", "ship")) {
+                if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
+                    // oh this is either really smart or really dumb
+                    //cargo value
+
+                    println!("{:#?}", macro_string);
+                    let re = Regex::new("<cargo max=\".*\" ta").expect("cargo max l");
+                    macro_string = re
+                        .replace(
+                            &macro_string,
+                            format!(
+                                "<cargo max=\"{}\" ta",
+                                macro_relations.get(&macroname.replace("storage", "ship")).expect("fucked up").0.as_str()
+                            )
+                            .as_str(),
+                        )
+                        .to_string();
+
+                    // storage name
+                    let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+                    macro_string = replace_pattern(
+                        &pattern,
+                        &macro_string,
+                        &macroname
+                            .replace(".xml", "")
+                            .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                            .replace("ship", "storage"),
+                    );
+
+                    let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
+                    if medium > &0 {
+                        let size = "size_m";
+                        makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &medium.to_string());
+                    }
+                    let small = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().1;
+                    if small > &0 {
+                        let size = "size_s";
+                        makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &small.to_string());
+                    }
+                }
+            }
+            // ware
+
+            let ware_string = fs::read_to_string(&toml_parsed.config.ware_path).unwrap();
+            for ware in ware_string.split_terminator("</ware>") {
+                if ware.contains(&macroname.replace(".xml", "")) == true {
+                    let mut ware_new = "".to_string();
+
+                    ware_new.push_str(&ware);
+
+                    ware_new.push_str("\n</ware>");
+
+                    let ware_parsed: Ware = serde_xml_rs::from_str(&ware_new).unwrap_or_default();
+                    let mut prng = rand::thread_rng();
+                    let ware_price = format!(
+                        "<price min=\"{}\" average=\"{}\" max=\"{}\" />",
+                        randomize(prng.gen_range(toml_parsed.l_config.min[0] as f32, toml_parsed.l_config.min[1] as f32), 1),
+                        randomize(
+                            prng.gen_range(toml_parsed.l_config.average[0] as f32, toml_parsed.l_config.average[1] as f32),
+                            1
+                        ),
+                        randomize(prng.gen_range(toml_parsed.l_config.max[0] as f32, toml_parsed.l_config.max[1] as f32), 1)
+                    );
+                    let re = Regex::new("<price.* />").unwrap();
+                    let mut ware_new = re.replace(&ware_new, ware_price.as_str()).into_owned();
+
+                    //##############################################
+                    // VARAINT!
+                    //##############################################
+                    if toml_parsed.config.varbool == true {
+                        let pattern = &ware_parsed.id;
+                        if pattern != "" {
+                            ware_new = replace_pattern(
+                                &pattern,
+                                &ware_new,
+                                &macroname.replace(".xml", "").replace("_macro", &toml_parsed.config.variant_name.as_str()),
+                            );
+                        }
+
+                        let rarity = rarity as usize + 2;
+                        let pattern = &ware_parsed.owner.faction;
+
+                        if pattern != "" {
+                            for faction in toml_parsed.faction_vec.argon.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.argon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.teladi.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.teladi.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.paranid.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.paranid.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.xenon.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.xenon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.khaak.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.khaak.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.pirates.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.pirates.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    let pattern = &ware_parsed.name;
+                    if pattern != "" {
+                        ware_new = replace_pattern(&pattern, &ware_new, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
+                    }
+                    let pattern = &ware_parsed.description;
+                    if pattern != "" {
+                        ware_new = replace_pattern(&pattern, &ware_new, &format!("{{{},{}}}", &toml_parsed.config.pageid, tbase.to_string()));
+                    }
+
+                    ware_file_string.push_str("\n");
+                    if variant == &true {
+                        ware_file_string.push_str(&ware_new);
+                    } else {
+                        ware_file_string.push_str(&ware_new);
+                    }
+                }
+            }
+
+            output(&m_out_path, &path, &toml_parsed.config.variant_name, &macro_string);
+        }
+    }
+    // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
+    for entry in fs::read_dir(&toml_parsed.config.m_dir_path).unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if !path.is_dir() {
+            tbase += 100;
+            tvar += 100;
+            tshort += 100;
+            tname += 100;
+            tdesc += 100;
+            let mut macro_string = fs::read_to_string(&path).unwrap();
+            if macro_string.contains("explosiondamage") {
+                let re = Regex::new("(<explosiondamage.*\n)").unwrap();
+                macro_string = re.replace(&macro_string, "<explosiondamage value=\"11111\" />\n").into_owned();
+            } else {
+                let re = "</software>";
+                macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
+            }
+
+            let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
+            let macroname = &path.file_name().unwrap().to_str().unwrap();
+
+            if macro_string.contains("class=\"storage\"") == true {
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+
+            if toml_parsed.config.varbool == true {
+                let pattern = &macro_parsed.r#macro.name;
+                if pattern != "" {
+                    let namecombo = &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                    macro_string = replace_pattern(pattern, &macro_string, namecombo);
+                    i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.name;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
+                    println!("{} {}", macroname, &toml_parsed.config.pageid);
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.basename;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tbase, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tbase.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.description;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tdesc, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tdesc.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.variation;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tvar, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tvar.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.shortvariation;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tshort, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tshort.to_string()));
+                }
+            }
+            // common macro stuff
+            // first order
+            let mut cargo = 0;
+            let mut mass = 0;
+            let mut hull = 0;
+            let mut rarity = 0;
+            // second order
+            let mut ammo = 0;
+            let mut unit = 0;
+            let hangarcapacity = ""; // not used since we do small and medium separately
+            let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
+
+            //
+            let mut i_pitch = 0;
+            let mut i_yaw = 0;
+            let mut i_roll = 0;
+            let mut forward = 0;
+            let mut reverse = 0;
+            let mut horizontal = 0;
+            let mut vertical = 0;
+            let mut d_pitch = 0;
+            let mut d_yaw = 0;
+            let mut d_roll = 0;
+
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            let purpose = &macro_parsed.r#macro.properties.purpose.primary;
+            let mut purpose_mod = 0.6;
+            // println!("purpose {}", purpose);
+            /*
+
+            might.. want to check the odd assumption.... but hey 50/50... right?
+            these ifs determine the ordered values and should eventually contain some unique logic beyond order
+            a few points about the ordering:
+            1. the order function should not be applied second order values as it loses its influence in longer chains of values.
+                a. cargo can roll high to enforce a high mass which in turn can roll an essentially random hull
+                b. a + or - values could be propagated through the chain by changing the average calculation to consider the min's
+                    position relative to its range in min_and_value
+            2. it would be fairly simple to add look ahead or look behind as some form of deterministic mechanism.
+            3. rarity is derivable from the first order values.
+                a. rarity can be split by tpwar faction type: major, minor, landed, aux, explore
+                b. not sure how good it would be to split rarity by faction category: pirate, mercenary, trader, zealot, scavenger
+            4.  the second order values are: ammo, people, hangarcapacity. the method described in 1.b might be the best method
+            5. see toml comment on ordering for details
+
+            purpose, mass, hull, ammo
+            */
+
+            // return_min_and_value
+            // if value <= average
+            // then min = average
+            //
+            let mut greater_than_average = false;
+            if purpose == "build" {
+                purpose_mod = toml_parsed.m_config.build_purposemod;
+                //mass // done
+                let min = &toml_parsed.m_config.mass[0];
+                let max = &toml_parsed.m_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                let average = (min + max) / 2;
+                if mass >= average {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.m_config.cargo[0];
+                let mut max = &toml_parsed.m_config.cargo[1];
+                let average = (min + max) / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                // hull
+                let mut min = &toml_parsed.m_config.hull[0];
+                let mut max = &toml_parsed.m_config.hull[1];
+                let average = (min + max) / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "fight" {
+                purpose_mod = toml_parsed.m_config.fight_purposemod;
+                //mass // done
+                let min = &toml_parsed.m_config.mass[0];
+                let max = &toml_parsed.m_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.m_config.cargo[0];
+                let mut max = &toml_parsed.m_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.m_config.hull[0];
+                let mut max = &toml_parsed.m_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "trade" {
+                purpose_mod = toml_parsed.m_config.trade_purposemod;
+                //mass // done
+                let min = &toml_parsed.m_config.mass[0];
+                let max = &toml_parsed.m_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.m_config.cargo[0];
+                let mut max = &toml_parsed.m_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.m_config.hull[0];
+                let mut max = &toml_parsed.m_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "auxiliary" {
+                purpose_mod = toml_parsed.m_config.auxiliary_purposemod;
+                //mass // done
+                let min = &toml_parsed.m_config.mass[0];
+                let max = &toml_parsed.m_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.m_config.cargo[0];
+                let mut max = &toml_parsed.m_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.m_config.hull[0];
+                let mut max = &toml_parsed.m_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            // apply purpose modifier to first order values
+            cargo = (cargo as f32 * purpose_mod) as i32;
+            hull = (hull as f32 * purpose_mod) as i32;
+            mass = (mass as f32 * purpose_mod) as i32;
+
+            // physics
+            let min = &toml_parsed.m_config.i_pitch[0];
+            let max = &toml_parsed.m_config.i_pitch[1];
+            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.i_yaw[0];
+            let max = &toml_parsed.m_config.i_yaw[1];
+            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.i_roll[0];
+            let max = &toml_parsed.m_config.i_roll[1];
+            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.forward[0];
+            let max = &toml_parsed.m_config.forward[1];
+            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.reverse[0];
+            let max = &toml_parsed.m_config.reverse[1];
+            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.horizontal[0];
+            let max = &toml_parsed.m_config.horizontal[1];
+            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.vertical[0];
+            let max = &toml_parsed.m_config.vertical[1];
+            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.d_pitch[0];
+            let max = &toml_parsed.m_config.d_pitch[1];
+            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.d_yaw[0];
+            let max = &toml_parsed.m_config.d_yaw[1];
+            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.m_config.d_roll[0];
+            let max = &toml_parsed.m_config.d_roll[1];
+            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            // sometimes this borks out - d_values were outputting values 10x what was calculated above
+            let physics = format!(
+                "<physics mass=\"{}\">
+        <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
+        <drag forward=\"{}\" reverse=\"{}\" horizontal=\"{}\" vertical=\"{}\" pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
+      </physics>",
+                mass, i_pitch, i_yaw, i_roll, forward, reverse, horizontal, vertical, d_pitch, d_yaw, d_roll
+            );
+            let re = Regex::new("((?s)<physics.*</physics>)").unwrap();
+            macro_string = re.replace(&macro_string, physics.as_str()).into_owned();
+            // storage and shipstorage
+            // hull replace
+            let pattern = format!("hull max=\"{}\"", &macro_parsed.r#macro.properties.hull.max);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("hull max=\"{}\"", &hull.to_string()).as_str());
+            }
+            // ammo choose, modify and replace
+            let min = &toml_parsed.m_config.ammo[0];
+            let max = &toml_parsed.m_config.ammo[1];
+            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
+            }
+            let min = &toml_parsed.m_config.unit[0];
+            let max = &toml_parsed.m_config.unit[1];
+            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
+            }
+            // people choose, modify and replace
+            let min = &toml_parsed.m_config.people[0];
+            let max = &toml_parsed.m_config.people[1];
+            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
+            }
+            // explosion choose, modify and replace
+            let min = &toml_parsed.m_config.explosion[0];
+            let max = &toml_parsed.m_config.explosion[1];
+            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
+            }
+            let mut small = 0;
+            if macro_string.contains("shipstorage_gen_s_01_macro") == true {
+                let min = &toml_parsed.m_config.hangarcapacity[0];
+                let max = &toml_parsed.m_config.hangarcapacity[1];
+                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                // replace name
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+            let mut medium = 0;
+            if macro_string.contains("shipstorage_gen_m_01_macro") == true {
+                let min = &toml_parsed.m_config.hangarcapacity[2];
+                let max = &toml_parsed.m_config.hangarcapacity[3];
+                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                //  replace name
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_m_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+
+            // storage name
+            // if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
+            let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            macro_string = replace_pattern(
+                &pattern,
+                &macro_string,
+                &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                    .replace("ship", "storage"),
+            );
+            // // storage name
+            // let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            // macro_string = replace_pattern(
+            //     &pattern,
+            //     &macro_string,
+            //     &macroname
+            //         .replace(".xml", "")
+            //         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+            //         .replace("ship", "storage"),
+            // );
+            // table!
+            macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
+            if macro_relations.contains_key(&macroname.replace("storage", "ship")) {
+                if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
+                    // oh this is either really smart or really dumb
+                    //cargo value
+                    let re = Regex::new("<cargo max=\".*\" ta").unwrap();
+                    macro_string = re
+                        .replace(
+                            &macro_string,
+                            format!(
+                                "<cargo max=\"{}\" ta",
+                                macro_relations.get(&macroname.replace("storage", "ship")).unwrap().0.as_str()
+                            )
+                            .as_str(),
+                        )
+                        .to_string();
+                    // storage name
+                    let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+                    macro_string = replace_pattern(
+                        &pattern,
+                        &macro_string,
+                        &macroname
+                            .replace(".xml", "")
+                            .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                            .replace("ship", "storage"),
+                    );
+
+                    let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
+                    if medium > &0 {
+                        let size = "size_m";
+                        makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &medium.to_string());
+                    }
+                    let small = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().1;
+                    if small > &0 {
+                        let size = "size_s";
+                        makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &small.to_string());
+                    }
+                }
+            }
+            // ware
+
+            let ware_string = fs::read_to_string(&toml_parsed.config.ware_path).unwrap();
+            for ware in ware_string.split_terminator("</ware>") {
+                if ware.contains(&macroname.replace(".xml", "")) == true {
+                    let mut ware_new = "".to_string();
+
+                    ware_new.push_str(&ware);
+
+                    ware_new.push_str("\n</ware>");
+                    let ware_parsed: Ware = serde_xml_rs::from_str(&ware_new).unwrap_or_default();
+                    let mut prng = rand::thread_rng();
+                    let ware_price = format!(
+                        "<price min=\"{}\" average=\"{}\" max=\"{}\" />",
+                        randomize(prng.gen_range(toml_parsed.m_config.min[0] as f32, toml_parsed.m_config.min[1] as f32), 1),
+                        randomize(
+                            prng.gen_range(toml_parsed.m_config.average[0] as f32, toml_parsed.m_config.average[1] as f32),
+                            1
+                        ),
+                        randomize(prng.gen_range(toml_parsed.m_config.max[0] as f32, toml_parsed.m_config.max[1] as f32), 1)
+                    );
+                    let re = Regex::new("<price.* />").unwrap();
+                    let mut ware_new = re.replace(&ware_new, ware_price.as_str()).into_owned();
+
+                    //##############################################
+                    // VARAINT!
+                    //##############################################
+                    if toml_parsed.config.varbool == true {
+                        let pattern = &ware_parsed.id;
+                        if pattern != "" {
+                            ware_new = replace_pattern(
+                                &pattern,
+                                &ware_new,
+                                &macroname.replace(".xml", "").replace("_macro", &toml_parsed.config.variant_name.as_str()),
+                            );
+                        }
+
+                        let rarity = rarity as usize + 2;
+                        let pattern = &ware_parsed.owner.faction;
+
+                        if pattern != "" {
+                            for faction in toml_parsed.faction_vec.argon.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.argon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.teladi.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.teladi.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.paranid.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.paranid.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.xenon.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.xenon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.khaak.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.khaak.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.pirates.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.pirates.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    let pattern = &ware_parsed.name;
+                    if pattern != "" {
+                        ware_new = replace_pattern(&pattern, &ware_new, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
+                    }
+                    let pattern = &ware_parsed.description;
+                    if pattern != "" {
+                        ware_new = replace_pattern(&pattern, &ware_new, &format!("{{{},{}}}", &toml_parsed.config.pageid, tbase.to_string()));
+                    }
+
+                    ware_file_string.push_str("\n");
+                    if variant == &true {
+                        ware_file_string.push_str(&ware_new);
+                    } else {
+                        ware_file_string.push_str(&ware_new);
+                    }
+                }
+            }
+
+            output(&m_out_path, &path, &toml_parsed.config.variant_name, &macro_string);
+        }
+    }
+    // invariant!!! - this reads the ships before the storage only because its somehow alphabetized
+    for entry in fs::read_dir(&toml_parsed.config.s_dir_path).unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if !path.is_dir() {
+            tbase += 100;
+            tvar += 100;
+            tshort += 100;
+            tname += 100;
+            tdesc += 100;
+            let mut macro_string = fs::read_to_string(&path).unwrap();
+            if macro_string.contains("explosiondamage") {
+                let re = Regex::new("(<explosiondamage.*\n)").unwrap();
+                macro_string = re.replace(&macro_string, "<explosiondamage value=\"11111\" />\n").into_owned();
+            } else {
+                let re = "</software>";
+                macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
+            }
+
+            let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
+            let macroname = &path.file_name().unwrap().to_str().unwrap();
+
+            if macro_string.contains("class=\"storage\"") == true {
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+
+            if toml_parsed.config.varbool == true {
+                let pattern = &macro_parsed.r#macro.name;
+                if pattern != "" {
+                    let namecombo = &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat());
+                    macro_string = replace_pattern(pattern, &macro_string, namecombo);
+                    i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.name;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
+                    println!("{} {}", macroname, &toml_parsed.config.pageid);
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.basename;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tbase, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tbase.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.description;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tdesc, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tdesc.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.variation;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tvar, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tvar.to_string()));
+                }
+                let pattern = &macro_parsed.r#macro.properties.identification.shortvariation;
+                if pattern != "" {
+                    //tfile
+                    let tname_line = get_tfile_value(&pattern, &unwrapped_tfile);
+                    t_string.push_str(&format!("\n{}", &tfile_ware(tshort, tname_line, &toml_parsed)));
+                    //macro
+                    macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tshort.to_string()));
+                }
+            }
+            // common macro stuff
+            // first order
+            let mut cargo = 0;
+            let mut mass = 0;
+            let mut hull = 0;
+            let mut rarity = 0;
+            // second order
+            let mut ammo = 0;
+            let mut unit = 0;
+            let hangarcapacity = ""; // not used since we do small and medium separately
+            let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
+
+            //
+            let mut i_pitch = 0;
+            let mut i_yaw = 0;
+            let mut i_roll = 0;
+            let mut forward = 0;
+            let mut reverse = 0;
+            let mut horizontal = 0;
+            let mut vertical = 0;
+            let mut d_pitch = 0;
+            let mut d_yaw = 0;
+            let mut d_roll = 0;
+
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            // let cargo = "";
+            let purpose = &macro_parsed.r#macro.properties.purpose.primary;
+            let mut purpose_mod = 0.6;
+            // println!("purpose {}", purpose);
+            /*
+
+            might.. want to check the odd assumption.... but hey 50/50... right?
+            these ifs determine the ordered values and should eventually contain some unique logic beyond order
+            a few points about the ordering:
+            1. the order function should not be applied second order values as it loses its influence in longer chains of values.
+                a. cargo can roll high to enforce a high mass which in turn can roll an essentially random hull
+                b. a + or - values could be propagated through the chain by changing the average calculation to consider the min's
+                    position relative to its range in min_and_value
+            2. it would be fairly simple to add look ahead or look behind as some form of deterministic mechanism.
+            3. rarity is derivable from the first order values.
+                a. rarity can be split by tpwar faction type: major, minor, landed, aux, explore
+                b. not sure how good it would be to split rarity by faction category: pirate, mercenary, trader, zealot, scavenger
+            4.  the second order values are: ammo, people, hangarcapacity. the method described in 1.b might be the best method
+            5. see toml comment on ordering for details
+
+            purpose, mass, hull, ammo
+            */
+
+            // return_min_and_value
+            // if value <= average
+            // then min = average
+            //
+            let mut greater_than_average = false;
+            if purpose == "build" {
+                purpose_mod = toml_parsed.s_config.build_purposemod;
+                //mass // done
+                let min = &toml_parsed.s_config.mass[0];
+                let max = &toml_parsed.s_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                let average = (min + max) / 2;
+                if mass >= average {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.s_config.cargo[0];
+                let mut max = &toml_parsed.s_config.cargo[1];
+                let average = (min + max) / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                // hull
+                let mut min = &toml_parsed.s_config.hull[0];
+                let mut max = &toml_parsed.s_config.hull[1];
+                let average = (min + max) / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "fight" {
+                purpose_mod = toml_parsed.s_config.fight_purposemod;
+                //mass // done
+                let min = &toml_parsed.s_config.mass[0];
+                let max = &toml_parsed.s_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.s_config.cargo[0];
+                let mut max = &toml_parsed.s_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.s_config.hull[0];
+                let mut max = &toml_parsed.s_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "trade" {
+                purpose_mod = toml_parsed.s_config.trade_purposemod;
+                //mass // done
+                let min = &toml_parsed.s_config.mass[0];
+                let max = &toml_parsed.s_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.s_config.cargo[0];
+                let mut max = &toml_parsed.s_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.s_config.hull[0];
+                let mut max = &toml_parsed.s_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            if purpose == "auxiliary" {
+                purpose_mod = toml_parsed.s_config.auxiliary_purposemod;
+                //mass // done
+                let min = &toml_parsed.s_config.mass[0];
+                let max = &toml_parsed.s_config.mass[1];
+                mass = return_min_and_value(*min, *max);
+                let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
+                if mass >= min + max / 2 {
+                    greater_than_average = true;
+                }
+                // cargo // done
+                let mut min = &toml_parsed.s_config.cargo[0];
+                let mut max = &toml_parsed.s_config.cargo[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    min = &average;
+                } else {
+                    max = &average
+                }
+                cargo = return_min_and_value(*min, *max);
+                let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
+                if cargo >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+
+                // hull
+                let mut min = &toml_parsed.s_config.hull[0];
+                let mut max = &toml_parsed.s_config.hull[1];
+                let average = min + max / 2;
+                if greater_than_average == true {
+                    max = &average;
+                } else {
+                    min = &average
+                }
+                hull = return_min_and_value(*min, *max);
+                let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
+                if hull >= average {
+                    greater_than_average = true;
+                } else {
+                    greater_than_average = false;
+                }
+                rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
+            }
+            // apply purpose modifier to first order values
+            cargo = (cargo as f32 * purpose_mod) as i32;
+            hull = (hull as f32 * purpose_mod) as i32;
+            mass = (mass as f32 * purpose_mod) as i32;
+
+            // physics
+            let min = &toml_parsed.s_config.i_pitch[0];
+            let max = &toml_parsed.s_config.i_pitch[1];
+            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.i_yaw[0];
+            let max = &toml_parsed.s_config.i_yaw[1];
+            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.i_roll[0];
+            let max = &toml_parsed.s_config.i_roll[1];
+            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.forward[0];
+            let max = &toml_parsed.s_config.forward[1];
+            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.reverse[0];
+            let max = &toml_parsed.s_config.reverse[1];
+            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.horizontal[0];
+            let max = &toml_parsed.s_config.horizontal[1];
+            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.vertical[0];
+            let max = &toml_parsed.s_config.vertical[1];
+            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.d_pitch[0];
+            let max = &toml_parsed.s_config.d_pitch[1];
+            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.d_yaw[0];
+            let max = &toml_parsed.s_config.d_yaw[1];
+            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let min = &toml_parsed.s_config.d_roll[0];
+            let max = &toml_parsed.s_config.d_roll[1];
+            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            // sometimes this borks out - d_values were outputting values 10x what was calculated above
+            let physics = format!(
+                "<physics mass=\"{}\">
+        <inertia pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
+        <drag forward=\"{}\" reverse=\"{}\" horizontal=\"{}\" vertical=\"{}\" pitch=\"{}\" yaw=\"{}\" roll=\"{}\"/>
+      </physics>",
+                mass, i_pitch, i_yaw, i_roll, forward, reverse, horizontal, vertical, d_pitch, d_yaw, d_roll
+            );
+            let re = Regex::new("((?s)<physics.*</physics>)").unwrap();
+            macro_string = re.replace(&macro_string, physics.as_str()).into_owned();
+            // storage and shipstorage
+            // hull replace
+            let pattern = format!("hull max=\"{}\"", &macro_parsed.r#macro.properties.hull.max);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("hull max=\"{}\"", &hull.to_string()).as_str());
+            }
+            // ammo choose, modify and replace
+            let min = &toml_parsed.s_config.ammo[0];
+            let max = &toml_parsed.s_config.ammo[1];
+            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
+            }
+            let min = &toml_parsed.s_config.unit[0];
+            let max = &toml_parsed.s_config.unit[1];
+            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
+            }
+            // people choose, modify and replace
+            let min = &toml_parsed.s_config.people[0];
+            let max = &toml_parsed.s_config.people[1];
+            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
+            }
+            // explosion choose, modify and replace
+            let min = &toml_parsed.s_config.explosion[0];
+            let max = &toml_parsed.s_config.explosion[1];
+            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
+            if pattern != "" {
+                macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
+            }
+            let mut small = 0;
+            if macro_string.contains("shipstorage_gen_s_01_macro") == true {
+                let min = &toml_parsed.s_config.hangarcapacity[0];
+                let max = &toml_parsed.s_config.hangarcapacity[1];
+                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                // replace name
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_s", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+            let mut medium = 0;
+            if macro_string.contains("shipstorage_gen_m_01_macro") == true {
+                let min = &toml_parsed.s_config.hangarcapacity[2];
+                let max = &toml_parsed.s_config.hangarcapacity[3];
+                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                //  replace name
+                let namecombo = &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
+                    .replace("ship", "shipstorage");
+                macro_string = macro_string.replace("shipstorage_gen_m_01_macro", namecombo);
+                i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
+            }
+
+            // storage name
+            // if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
+            let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            macro_string = replace_pattern(
+                &pattern,
+                &macro_string,
+                &macroname
+                    .replace(".xml", "")
+                    .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                    .replace("ship", "storage"),
+            );
+            // // storage name
+            // let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+            // macro_string = replace_pattern(
+            //     &pattern,
+            //     &macro_string,
+            //     &macroname
+            //         .replace(".xml", "")
+            //         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+            //         .replace("ship", "storage"),
+            // );
+            // table!
+            macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
+            if macro_relations.contains_key(&macroname.replace("storage", "ship")) {
+                if macro_relations.contains_key(&macroname.to_owned().to_string().replace("ship", "storage")) {
+                    // oh this is either really smart or really dumb
+                    //cargo value
+                    let re = Regex::new("<cargo max=\".*\" ta").unwrap();
+                    macro_string = re
+                        .replace(
+                            &macro_string,
+                            format!(
+                                "<cargo max=\"{}\" ta",
+                                macro_relations.get(&macroname.replace("storage", "ship")).unwrap().0.as_str()
+                            )
+                            .as_str(),
+                        )
+                        .to_string();
+                    // storage name
+                    let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+                    macro_string = replace_pattern(
+                        &pattern,
+                        &macro_string,
+                        &macroname
+                            .replace(".xml", "")
+                            .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                            .replace("ship", "storage"),
+                    );
+
+                    let medium = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().2;
+                    if medium > &0 {
+                        let size = "size_m";
+                        makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &medium.to_string());
+                    }
+                    let small = &macro_relations.get(&macroname.replace("storage", "ship").to_owned()).unwrap().1;
+                    if small > &0 {
+                        let size = "size_s";
+                        makeshipstorage(&toml_parsed, &m_out_path, &macroname.to_string(), &size.to_string(), &small.to_string());
+                    }
+                }
+            }
+            // ware
+
+            let ware_string = fs::read_to_string(&toml_parsed.config.ware_path).unwrap();
+            for ware in ware_string.split_terminator("</ware>") {
+                if ware.contains(&macroname.replace(".xml", "")) == true {
+                    let mut ware_new = "".to_string();
+
+                    ware_new.push_str(&ware);
+
+                    ware_new.push_str("\n</ware>");
+                    let ware_parsed: Ware = serde_xml_rs::from_str(&ware_new).unwrap_or_default();
+                    let mut prng = rand::thread_rng();
+                    let ware_price = format!(
+                        "<price min=\"{}\" average=\"{}\" max=\"{}\" />",
+                        randomize(prng.gen_range(toml_parsed.s_config.min[0] as f32, toml_parsed.s_config.min[1] as f32), 1),
+                        randomize(
+                            prng.gen_range(toml_parsed.s_config.average[0] as f32, toml_parsed.s_config.average[1] as f32),
+                            1
+                        ),
+                        randomize(prng.gen_range(toml_parsed.s_config.max[0] as f32, toml_parsed.s_config.max[1] as f32), 1)
+                    );
+                    let re = Regex::new("<price.* />").unwrap();
+                    let mut ware_new = re.replace(&ware_new, ware_price.as_str()).into_owned();
+
+                    //##############################################
+                    // VARAINT!
+                    //##############################################
+                    if toml_parsed.config.varbool == true {
+                        let pattern = &ware_parsed.id;
+                        if pattern != "" {
+                            ware_new = replace_pattern(
+                                &pattern,
+                                &ware_new,
+                                &macroname.replace(".xml", "").replace("_macro", &toml_parsed.config.variant_name.as_str()),
+                            );
+                        }
+
+                        let rarity = rarity as usize + 2;
+                        let pattern = &ware_parsed.owner.faction;
+
+                        if pattern != "" {
+                            for faction in toml_parsed.faction_vec.argon.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.argon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.teladi.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.teladi.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.paranid.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.paranid.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.xenon.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.xenon.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.khaak.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.khaak.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                            for faction in toml_parsed.faction_vec.pirates.iter() {
+                                if pattern == faction {
+                                    let owner_string = &ownership(toml_parsed.faction_vec.pirates.choose_multiple(&mut rand::thread_rng(), rarity)).to_owned();
+                                    let re = Regex::new("<owner.* />").unwrap();
+                                    if owner_string != "" {
+                                        ware_new = re.replace(&ware_new, owner_string.as_str()).into_owned();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    let pattern = &ware_parsed.name;
+                    if pattern != "" {
+                        ware_new = replace_pattern(&pattern, &ware_new, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
+                    }
+                    let pattern = &ware_parsed.description;
+                    if pattern != "" {
+                        ware_new = replace_pattern(&pattern, &ware_new, &format!("{{{},{}}}", &toml_parsed.config.pageid, tbase.to_string()));
+                    }
+
+                    ware_file_string.push_str("\n");
+                    if variant == &true {
+                        ware_file_string.push_str(&ware_new);
+                    } else {
+                        ware_file_string.push_str(&ware_new);
+                    }
+                }
+            }
+
+            output(&m_out_path, &path, &toml_parsed.config.variant_name, &macro_string);
+        }
+    }
     let mut outputfile = File::create(format!("{}{}", &w_out_path, "wares.xml")).unwrap();
     outputfile.write_all(ware_file_string.as_bytes()).unwrap();
     let mut outputfile = File::create(format!("{}{}", &t_out_path, "tfiles.xml")).unwrap();
