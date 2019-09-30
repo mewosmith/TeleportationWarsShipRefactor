@@ -649,9 +649,31 @@ fn main() {
                     .replace(".xml", "")
                     .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "size_m", "_macro"].concat())
                     .replace("ship", "shipstorage");
-                macro_string = macro_string.replace("shipstorage_gen_s_01_macro", namecombo);
+                macro_string = macro_string.replace("shipstorage_gen_m_01_macro", namecombo);
                 i_string.push_str(&i_add(namecombo.to_string(), toml_parsed.config.mod_name.to_string()));
             }
+            
+            // storage name
+                if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
+                let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+                macro_string = replace_pattern(
+                    &pattern,
+                    &macro_string,
+                    &macroname
+                        .replace(".xml", "")
+                        .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                        .replace("ship", "storage"),
+                );
+                // // storage name
+                // let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
+                // macro_string = replace_pattern(
+                //     &pattern,
+                //     &macro_string,
+                //     &macroname
+                //         .replace(".xml", "")
+                //         .replace("_macro", &[&toml_parsed.config.variant_name.as_str(), "_macro"].concat())
+                //         .replace("ship", "storage"),
+                // );
             // table!
             macro_relations.insert(macroname.to_string(), (cargo.to_string(), small, medium));
         
