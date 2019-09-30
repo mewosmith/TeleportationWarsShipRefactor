@@ -288,6 +288,7 @@ fn main() {
                     t_string.push_str(&format!("\n{}", &tfile_ware(tname, tname_line, &toml_parsed)));
                     //macro
                     macro_string = replace_pattern(&pattern, &macro_string, &format!("{{{},{}}}", &toml_parsed.config.pageid, tname.to_string()));
+                    println!("{} {}", macroname, &toml_parsed.config.pageid);
                 }
                 let pattern = &macro_parsed.r#macro.properties.identification.basename;
                 if pattern != "" {
@@ -607,40 +608,40 @@ fn main() {
             macro_string = re.replace(&macro_string, physics.as_str()).into_owned();
             // storage and shipstorage
             // hull replace
-            let pattern = &macro_parsed.r#macro.properties.hull.max;
+            let pattern = format!("hull max=\"{}\"", &macro_parsed.r#macro.properties.hull.max);
             if pattern != "" {
-                macro_string = macro_string.replace(pattern, &hull.to_string());
+                macro_string = macro_string.replace(&pattern, format!("hull max=\"{}\"", &hull.to_string()).as_str());
             }
             // ammo choose, modify and replace
             let min = &toml_parsed.xlconfig.ammo[0];
             let max = &toml_parsed.xlconfig.ammo[1];
             ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let pattern = &macro_parsed.r#macro.properties.storage.missile;
+            let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
             if pattern != "" {
-                macro_string = macro_string.replace(pattern, &ammo.to_string());
+                macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
             }
             let min = &toml_parsed.xlconfig.unit[0];
             let max = &toml_parsed.xlconfig.unit[1];
             unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let pattern = &macro_parsed.r#macro.properties.storage.unit;
+            let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
             if pattern != "" {
-                macro_string = macro_string.replace(pattern, &unit.to_string());
+                macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
             }
             // people choose, modify and replace
             let min = &toml_parsed.xlconfig.people[0];
             let max = &toml_parsed.xlconfig.people[1];
             people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let pattern = &macro_parsed.r#macro.properties.people.capacity;
+            let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
             if pattern != "" {
-                macro_string = macro_string.replace(pattern, &people.to_string());
+                macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
             }
             // explosion choose, modify and replace
             let min = &toml_parsed.xlconfig.explosion[0];
             let max = &toml_parsed.xlconfig.explosion[1];
             let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
-            let pattern = &macro_parsed.r#macro.properties.explosiondamage.value;
+            let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
             if pattern != "" {
-                macro_string = macro_string.replace(pattern, &explosion.to_string());
+                macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
             }
             let mut small = 0;
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
@@ -670,7 +671,7 @@ fn main() {
             }
             
             // storage name
-                if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
+                // if macro_string.contains("storage_arg_xl_builder_01_a_macro") {println!("{:?}", macroname)}
                 let pattern = &macroname.replace(".xml", "").replace("ship", "storage");
                 macro_string = replace_pattern(
                     &pattern,
