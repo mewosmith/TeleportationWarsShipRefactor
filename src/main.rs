@@ -48,6 +48,10 @@ struct xl_config {
     build_purposemod: f32,
     mine_purposemod: f32,
     auxiliary_purposemod: f32,
+    //wareprice
+    min: Vec<i32>,
+    average: Vec<i32>,
+    max: Vec<i32>,
     // first order
     mass: Vec<i32>,
     hull: Vec<i32>,
@@ -736,9 +740,9 @@ fn main() {
                     let mut prng = rand::thread_rng();
                     let ware_price = format!(
                         "<price min=\"{}\" average=\"{}\" max=\"{}\" />",
-                        randomize(prng.gen_range(0.5, 5.0), 25000),
-                        randomize(prng.gen_range(0.5, 5.0), 25000),
-                        randomize(prng.gen_range(0.5, 5.0), 25000)
+                        randomize(prng.gen_range(toml_parsed.xlconfig.min[0] as f32, toml_parsed.xlconfig.min[1] as f32), 1),
+                        randomize(prng.gen_range(toml_parsed.xlconfig.average[0] as f32, toml_parsed.xlconfig.average[1] as f32), 1),
+                        randomize(prng.gen_range(toml_parsed.xlconfig.max[0] as f32, toml_parsed.xlconfig.max[1] as f32), 1)
                     );
                     let re = Regex::new("<price.* />").unwrap();
                     let mut ware_new = re.replace(&ware_new, ware_price.as_str()).into_owned();
