@@ -6,3 +6,4 @@ TODO:
 - primary purpose "mine" should be hooked up to its own purpose if (it shares values with trade at the moment)
 - test a "release" mode build 
 - go over the rules expressed in Config.toml
+- test variant false
