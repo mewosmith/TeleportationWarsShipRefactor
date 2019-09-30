@@ -245,6 +245,14 @@ fn main() {
             tname += 100;
             tdesc += 100;
             let mut macro_string = fs::read_to_string(&path).unwrap();
+            if macro_string.contains("explosiondamage") {
+                let re = Regex::new("(<explosiondamage.*\n)").unwrap();
+                macro_string = re.replace(&macro_string, "<explosiondamage value=\"11111\" />\n").into_owned();
+            }
+            else {
+                let re = "</software>";
+                macro_string = macro_string.replace(re, "</software>\n      <explosiondamage value=\"11111\" />");
+            }
 
             let macro_parsed: Macros = serde_xml_rs::from_str(&macro_string).unwrap_or_default();
             let macroname = &path.file_name().unwrap().to_str().unwrap();
