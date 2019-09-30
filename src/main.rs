@@ -207,6 +207,14 @@ fn main() {
     // a hashmap is used to keep track of values calculated for ships so that when their
     // corresponding storage macro is read the ship stats can be applied to it and the shipstorage macro can be generated
 
+    // TODO to make it a mod
+    // create mod folder and contents file with proper name
+    // index: filename to macros.xml and add diff lines
+    // wares: add diff lines
+    // macros: copy folder and delete cockpit macro file
+    // tfiles: filename to 0001-L044.xml and add diff lines + page line opening and ending, with proper page id
+    // md folder :)
+
     let mut tname = 1;
     let mut tbase = 2;
     let mut tdesc = 3;
