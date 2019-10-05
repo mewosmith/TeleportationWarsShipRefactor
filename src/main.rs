@@ -338,7 +338,7 @@ fn main() {
     let mut i_string = "".to_string();
     let mut t_string = "".to_string();
     let mut ware_file_string = "".to_string();
-    let ware_new = "".to_string();
+    let _ware_new = "".to_string();
     let toml_str = include_str!("Config.toml");
     let toml_parsed: Toml = toml::from_str(&toml_str).unwrap();
     let variant = &toml_parsed.config.varbool;
@@ -455,7 +455,7 @@ fn main() {
             // second order
             let mut ammo = 0;
             let mut unit = 0;
-            let hangarcapacity = ""; // not used since we do small and medium separately
+            let _hangarcapacity = ""; // not used since we do small and medium separately
             let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
 
             //
@@ -508,7 +508,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xl_config.mass[0];
                 let max = &toml_parsed.xl_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
                 if mass >= average {
@@ -523,7 +523,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -539,7 +539,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -553,7 +553,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xl_config.mass[0];
                 let max = &toml_parsed.xl_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -567,7 +567,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -584,7 +584,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -598,7 +598,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xl_config.mass[0];
                 let max = &toml_parsed.xl_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -612,7 +612,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -629,7 +629,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -643,7 +643,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xl_config.mass[0];
                 let max = &toml_parsed.xl_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -657,7 +657,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -674,7 +674,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -684,41 +684,39 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             // apply purpose modifier to first order values
-            cargo = (cargo as f32 * purpose_mod) as i32;
-            hull = (hull as f32 * purpose_mod) as i32;
-            mass = (mass as f32 * purpose_mod) as i32;
+            
           
             // physics
             let min = &toml_parsed.xl_config.i_pitch[0];
             let max = &toml_parsed.xl_config.i_pitch[1];
-            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.i_yaw[0];
             let max = &toml_parsed.xl_config.i_yaw[1];
-            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.i_roll[0];
             let max = &toml_parsed.xl_config.i_roll[1];
-            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_roll = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.forward[0];
             let max = &toml_parsed.xl_config.forward[1];
-            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            forward = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.reverse[0];
             let max = &toml_parsed.xl_config.reverse[1];
-            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            reverse = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.horizontal[0];
             let max = &toml_parsed.xl_config.horizontal[1];
-            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            horizontal = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.vertical[0];
             let max = &toml_parsed.xl_config.vertical[1];
-            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            vertical = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.d_pitch[0];
             let max = &toml_parsed.xl_config.d_pitch[1];
-            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.d_yaw[0];
             let max = &toml_parsed.xl_config.d_yaw[1];
-            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.xl_config.d_roll[0];
             let max = &toml_parsed.xl_config.d_roll[1];
-            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_roll = return_min_and_value(*min, *max);
             // sometimes this borks out - d_values were outputting values 10x what was calculated above
             let physics = format!(
                 "<physics mass=\"{}\">
@@ -738,14 +736,14 @@ fn main() {
             // ammo choose, modify and replace
             let min = &toml_parsed.xl_config.ammo[0];
             let max = &toml_parsed.xl_config.ammo[1];
-            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            ammo = return_min_and_value(*min, *max);
             let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
             }
             let min = &toml_parsed.xl_config.unit[0];
             let max = &toml_parsed.xl_config.unit[1];
-            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            unit = return_min_and_value(*min, *max);
             let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
@@ -753,7 +751,7 @@ fn main() {
             // people choose, modify and replace
             let min = &toml_parsed.xl_config.people[0];
             let max = &toml_parsed.xl_config.people[1];
-            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            people = return_min_and_value(*min, *max);
             let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
@@ -761,7 +759,7 @@ fn main() {
             // explosion choose, modify and replace
             let min = &toml_parsed.xl_config.explosion[0];
             let max = &toml_parsed.xl_config.explosion[1];
-            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let explosion = return_min_and_value(*min, *max);
             let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
@@ -770,7 +768,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
                 let min = &toml_parsed.xl_config.hangarcapacity[0];
                 let max = &toml_parsed.xl_config.hangarcapacity[1];
-                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                small = return_min_and_value(*min, *max);
                 // replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -783,7 +781,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
                 let min = &toml_parsed.xl_config.hangarcapacity[2];
                 let max = &toml_parsed.xl_config.hangarcapacity[3];
-                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                medium = return_min_and_value(*min, *max);
                 //  replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -1063,7 +1061,7 @@ fn main() {
             // second order
             let mut ammo = 0;
             let mut unit = 0;
-            let hangarcapacity = ""; // not used since we do small and medium separately
+            let _hangarcapacity = ""; // not used since we do small and medium separately
             let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
 
             //
@@ -1116,7 +1114,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                  println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
@@ -1132,7 +1130,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1148,7 +1146,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1162,7 +1160,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                  println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
@@ -1177,7 +1175,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1194,7 +1192,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1208,7 +1206,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                  println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
@@ -1223,7 +1221,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1240,7 +1238,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1254,7 +1252,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                  println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
@@ -1269,7 +1267,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1286,7 +1284,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1298,43 +1296,41 @@ fn main() {
             // apply purpose modifier to first order values
             // works
             
-            cargo = (cargo as f32 * purpose_mod) as i32;
-            hull = (hull as f32 * purpose_mod) as i32;
-            mass = (mass as f32 * purpose_mod) as i32;
+            
 
             // println!("mass OUT: {}, macro {}", mass, macroname);
 
             // physics
             let min = &toml_parsed.l_config.i_pitch[0];
             let max = &toml_parsed.l_config.i_pitch[1];
-            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.i_yaw[0];
             let max = &toml_parsed.l_config.i_yaw[1];
-            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.i_roll[0];
             let max = &toml_parsed.l_config.i_roll[1];
-            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_roll = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.forward[0];
             let max = &toml_parsed.l_config.forward[1];
-            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            forward = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.reverse[0];
             let max = &toml_parsed.l_config.reverse[1];
-            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            reverse = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.horizontal[0];
             let max = &toml_parsed.l_config.horizontal[1];
-            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            horizontal = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.vertical[0];
             let max = &toml_parsed.l_config.vertical[1];
-            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            vertical = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.d_pitch[0];
             let max = &toml_parsed.l_config.d_pitch[1];
-            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.d_yaw[0];
             let max = &toml_parsed.l_config.d_yaw[1];
-            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.l_config.d_roll[0];
             let max = &toml_parsed.l_config.d_roll[1];
-            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_roll = return_min_and_value(*min, *max);
             // sometimes this borks out - d_values were outputting values 10x what was calculated above
             let physics = format!(
                 "<physics mass=\"{}\">
@@ -1354,14 +1350,14 @@ fn main() {
             // ammo choose, modify and replace
             let min = &toml_parsed.l_config.ammo[0];
             let max = &toml_parsed.l_config.ammo[1];
-            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            ammo = return_min_and_value(*min, *max);
             let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
             }
             let min = &toml_parsed.l_config.unit[0];
             let max = &toml_parsed.l_config.unit[1];
-            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            unit = return_min_and_value(*min, *max);
             let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
@@ -1369,7 +1365,7 @@ fn main() {
             // people choose, modify and replace
             let min = &toml_parsed.l_config.people[0];
             let max = &toml_parsed.l_config.people[1];
-            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            people = return_min_and_value(*min, *max);
             let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
@@ -1377,7 +1373,7 @@ fn main() {
             // explosion choose, modify and replace
             let min = &toml_parsed.l_config.explosion[0];
             let max = &toml_parsed.l_config.explosion[1];
-            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let explosion = return_min_and_value(*min, *max);
             let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
@@ -1386,7 +1382,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
                 let min = &toml_parsed.l_config.hangarcapacity[0];
                 let max = &toml_parsed.l_config.hangarcapacity[1];
-                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                small = return_min_and_value(*min, *max);
                 // replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -1399,7 +1395,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
                 let min = &toml_parsed.l_config.hangarcapacity[2];
                 let max = &toml_parsed.l_config.hangarcapacity[3];
-                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                medium = return_min_and_value(*min, *max);
                 //  replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -1687,7 +1683,7 @@ fn main() {
             // second order
             let mut ammo = 0;
             let mut unit = 0;
-            let hangarcapacity = ""; // not used since we do small and medium separately
+            let _hangarcapacity = ""; // not used since we do small and medium separately
             let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
 
             //
@@ -1740,7 +1736,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.m_config.mass[0];
                 let max = &toml_parsed.m_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
                 if mass >= average {
@@ -1755,7 +1751,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1771,7 +1767,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1785,7 +1781,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.m_config.mass[0];
                 let max = &toml_parsed.m_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -1799,7 +1795,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1816,7 +1812,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1830,7 +1826,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.m_config.mass[0];
                 let max = &toml_parsed.m_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -1844,7 +1840,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1861,7 +1857,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1875,7 +1871,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.m_config.mass[0];
                 let max = &toml_parsed.m_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -1889,7 +1885,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1906,7 +1902,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1916,41 +1912,39 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             // apply purpose modifier to first order values
-            cargo = (cargo as f32 * purpose_mod) as i32;
-            hull = (hull as f32 * purpose_mod) as i32;
-            mass = (mass as f32 * purpose_mod) as i32;
+            
 
             // physics
             let min = &toml_parsed.m_config.i_pitch[0];
             let max = &toml_parsed.m_config.i_pitch[1];
-            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.i_yaw[0];
             let max = &toml_parsed.m_config.i_yaw[1];
-            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.i_roll[0];
             let max = &toml_parsed.m_config.i_roll[1];
-            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_roll = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.forward[0];
             let max = &toml_parsed.m_config.forward[1];
-            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            forward = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.reverse[0];
             let max = &toml_parsed.m_config.reverse[1];
-            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            reverse = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.horizontal[0];
             let max = &toml_parsed.m_config.horizontal[1];
-            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            horizontal = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.vertical[0];
             let max = &toml_parsed.m_config.vertical[1];
-            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            vertical = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.d_pitch[0];
             let max = &toml_parsed.m_config.d_pitch[1];
-            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.d_yaw[0];
             let max = &toml_parsed.m_config.d_yaw[1];
-            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.m_config.d_roll[0];
             let max = &toml_parsed.m_config.d_roll[1];
-            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_roll = return_min_and_value(*min, *max);
             // sometimes this borks out - d_values were outputting values 10x what was calculated above
             let physics = format!(
                 "<physics mass=\"{}\">
@@ -1970,14 +1964,14 @@ fn main() {
             // ammo choose, modify and replace
             let min = &toml_parsed.m_config.ammo[0];
             let max = &toml_parsed.m_config.ammo[1];
-            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            ammo = return_min_and_value(*min, *max);
             let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
             }
             let min = &toml_parsed.m_config.unit[0];
             let max = &toml_parsed.m_config.unit[1];
-            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            unit = return_min_and_value(*min, *max);
             let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
@@ -1985,7 +1979,7 @@ fn main() {
             // people choose, modify and replace
             let min = &toml_parsed.m_config.people[0];
             let max = &toml_parsed.m_config.people[1];
-            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            people = return_min_and_value(*min, *max);
             let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
@@ -1993,7 +1987,7 @@ fn main() {
             // explosion choose, modify and replace
             let min = &toml_parsed.m_config.explosion[0];
             let max = &toml_parsed.m_config.explosion[1];
-            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let explosion = return_min_and_value(*min, *max);
             let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
@@ -2002,7 +1996,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
                 let min = &toml_parsed.m_config.hangarcapacity[0];
                 let max = &toml_parsed.m_config.hangarcapacity[1];
-                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                small = return_min_and_value(*min, *max);
                 // replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -2015,7 +2009,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
                 let min = &toml_parsed.m_config.hangarcapacity[2];
                 let max = &toml_parsed.m_config.hangarcapacity[3];
-                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                medium = return_min_and_value(*min, *max);
                 //  replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -2233,7 +2227,6 @@ fn main() {
                
                 
             }
-            // PANICKS BECAUSE TFILE ISNT IN SET
             let re = Regex::new("basename=\".*\"").unwrap();
             if re.is_match(&macro_string) == false {
               
@@ -2326,7 +2319,7 @@ fn main() {
             // second order
             let mut ammo = 0;
             let mut unit = 0;
-            let hangarcapacity = ""; // not used since we do small and medium separately
+            let _hangarcapacity = ""; // not used since we do small and medium separately
             let mut people = 0; // TODO not currently affected by purpose_mod, should we add?
 
             //
@@ -2379,7 +2372,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.s_config.mass[0];
                 let max = &toml_parsed.s_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 let average = (min + max) / 2;
                 if mass >= average {
@@ -2394,7 +2387,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -2410,7 +2403,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -2424,7 +2417,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.s_config.mass[0];
                 let max = &toml_parsed.s_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -2438,7 +2431,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -2455,7 +2448,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -2469,7 +2462,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.s_config.mass[0];
                 let max = &toml_parsed.s_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -2483,7 +2476,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -2500,7 +2493,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -2514,7 +2507,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.s_config.mass[0];
                 let max = &toml_parsed.s_config.mass[1];
-                mass = return_min_and_value(*min, *max);
+                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -2528,7 +2521,8 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = return_min_and_value(*min, *max);
+
+                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -2545,7 +2539,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = return_min_and_value(*min, *max);
+                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -2555,41 +2549,39 @@ fn main() {
                 rarity = set_rarity(cargo_rarity, hull_rarity, mass_rarity);
             }
             // apply purpose modifier to first order values
-            cargo = (cargo as f32 * purpose_mod) as i32;
-            hull = (hull as f32 * purpose_mod) as i32;
-            mass = (mass as f32 * purpose_mod) as i32;
+            
 
             // physics
             let min = &toml_parsed.s_config.i_pitch[0];
             let max = &toml_parsed.s_config.i_pitch[1];
-            i_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.i_yaw[0];
             let max = &toml_parsed.s_config.i_yaw[1];
-            i_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.i_roll[0];
             let max = &toml_parsed.s_config.i_roll[1];
-            i_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            i_roll = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.forward[0];
             let max = &toml_parsed.s_config.forward[1];
-            forward = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            forward = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.reverse[0];
             let max = &toml_parsed.s_config.reverse[1];
-            reverse = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            reverse = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.horizontal[0];
             let max = &toml_parsed.s_config.horizontal[1];
-            horizontal = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            horizontal = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.vertical[0];
             let max = &toml_parsed.s_config.vertical[1];
-            vertical = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            vertical = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.d_pitch[0];
             let max = &toml_parsed.s_config.d_pitch[1];
-            d_pitch = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_pitch = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.d_yaw[0];
             let max = &toml_parsed.s_config.d_yaw[1];
-            d_yaw = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_yaw = return_min_and_value(*min, *max);
             let min = &toml_parsed.s_config.d_roll[0];
             let max = &toml_parsed.s_config.d_roll[1];
-            d_roll = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            d_roll = return_min_and_value(*min, *max);
             // sometimes this borks out - d_values were outputting values 10x what was calculated above
             let physics = format!(
                 "<physics mass=\"{}\">
@@ -2609,14 +2601,14 @@ fn main() {
             // ammo choose, modify and replace
             let min = &toml_parsed.s_config.ammo[0];
             let max = &toml_parsed.s_config.ammo[1];
-            ammo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            ammo = return_min_and_value(*min, *max);
             let pattern = format!("missile=\"{}\"", &macro_parsed.r#macro.properties.storage.missile);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("missile=\"{}\"", &ammo.to_string()).as_str());
             }
             let min = &toml_parsed.s_config.unit[0];
             let max = &toml_parsed.s_config.unit[1];
-            unit = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            unit = return_min_and_value(*min, *max);
             let pattern = format!("unit=\"{}\"", &macro_parsed.r#macro.properties.storage.unit);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("unit=\"{}\"", &unit.to_string()).as_str());
@@ -2624,7 +2616,7 @@ fn main() {
             // people choose, modify and replace
             let min = &toml_parsed.s_config.people[0];
             let max = &toml_parsed.s_config.people[1];
-            people = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            people = return_min_and_value(*min, *max);
             let pattern = format!("capacity=\"{}\"", &macro_parsed.r#macro.properties.people.capacity);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("capacity=\"{}\"", &people.to_string()).as_str());
@@ -2632,7 +2624,7 @@ fn main() {
             // explosion choose, modify and replace
             let min = &toml_parsed.s_config.explosion[0];
             let max = &toml_parsed.s_config.explosion[1];
-            let explosion = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+            let explosion = return_min_and_value(*min, *max);
             let pattern = format!("value=\"{}\"", &macro_parsed.r#macro.properties.explosiondamage.value);
             if pattern != "" {
                 macro_string = macro_string.replace(&pattern, format!("value=\"{}\"", &explosion.to_string()).as_str());
@@ -2641,7 +2633,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_s_01_macro") == true {
                 let min = &toml_parsed.s_config.hangarcapacity[0];
                 let max = &toml_parsed.s_config.hangarcapacity[1];
-                small = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                small = return_min_and_value(*min, *max);
                 // replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -2654,7 +2646,7 @@ fn main() {
             if macro_string.contains("shipstorage_gen_m_01_macro") == true {
                 let min = &toml_parsed.s_config.hangarcapacity[2];
                 let max = &toml_parsed.s_config.hangarcapacity[3];
-                medium = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                medium = return_min_and_value(*min, *max);
                 //  replace name
                 let namecombo = &macroname
                     .replace(".xml", "")
@@ -2902,7 +2894,7 @@ fn makeshipstorage(toml_parsed: &Toml, m_out_path: &String, macroname: &String, 
 // input min and max of expected range -> min or average of the range, and value of the range result.
 fn return_min_and_value(min: i32, max: i32) -> (i32) {
     let mut prng = rand::thread_rng();
-    let mut returnmin = 0;
+    let _returnmin = 0;
     let value = prng.gen_range(min, max);
     value
 }
@@ -2986,7 +2978,7 @@ fn get_rarity_float(value: f32, min: f32, max: f32) -> f32 {
 }
 
 fn set_rarity(cargo: f32, hull: f32, mass: f32) -> i32 {
-    let mut rarity: i32;
+    let rarity: i32;
     let average = (cargo + hull - mass) / 3.0;
     if average < -0.6 {
         rarity = 5

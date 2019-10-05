@@ -61,15 +61,15 @@ pirates = ["scaleplate", "hatikvah", "atlas", "sovsyn" , "cartel", "strongarms",
 
 [xl_config]
 #purpose
-trade_purposemod = 0.1
-fight_purposemod = 1.5
+trade_purposemod = 2.0
+fight_purposemod = 2.0
 build_purposemod = 0.5
-mine_purposemod = 1
-auxiliary_purposemod= 3.1
+mine_purposemod = 1.0
+auxiliary_purposemod= 1.8
 #wareprice
-min = [50000000,100000000]
-average = [100000000, 120000000]
-max = [120000000,150000000]
+min = [5000000,10000000]
+average = [10000000, 12000000]
+max = [12000000,15000000]
 #physics - min and max CANNOT be the same value
 mass= [549, 5049]
 i_pitch= [617, 618]
