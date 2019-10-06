@@ -553,7 +553,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xl_config.mass[0];
                 let max = &toml_parsed.xl_config.mass[1];
-                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                mass =return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -567,7 +567,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                cargo = return_min_and_value(*min, *max);
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -598,7 +598,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.xl_config.mass[0];
                 let max = &toml_parsed.xl_config.mass[1];
-                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -629,7 +629,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                hull = return_min_and_value(*min, *max);
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1160,7 +1160,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
-                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                mass = return_min_and_value(*min, *max);
                  println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
@@ -1175,7 +1175,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                cargo = return_min_and_value(*min, *max);
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -1206,7 +1206,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.l_config.mass[0];
                 let max = &toml_parsed.l_config.mass[1];
-                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                mass = return_min_and_value(*min, *max);
                  println!("mass Start: {}, macro {}", mass, macroname);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
@@ -1238,7 +1238,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                hull = return_min_and_value(*min, *max);
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;
@@ -1795,7 +1795,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                cargo = return_min_and_value(*min, *max);
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -2417,7 +2417,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.s_config.mass[0];
                 let max = &toml_parsed.s_config.mass[1];
-                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -2431,7 +2431,7 @@ fn main() {
                 } else {
                     max = &average
                 }
-                cargo = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                cargo = return_min_and_value(*min, *max);
                 let cargo_rarity = get_rarity_float(cargo as f32, *min as f32, *max as f32);
                 if cargo >= average {
                     greater_than_average = true;
@@ -2462,7 +2462,7 @@ fn main() {
                 //mass // done
                 let min = &toml_parsed.s_config.mass[0];
                 let max = &toml_parsed.s_config.mass[1];
-                mass = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                mass = return_min_and_value(*min, *max);
                 let mass_rarity = get_rarity_float(mass as f32, *min as f32, *max as f32);
                 if mass >= min + max / 2 {
                     greater_than_average = true;
@@ -2493,7 +2493,7 @@ fn main() {
                 } else {
                     min = &average
                 }
-                hull = (return_min_and_value(*min, *max) as f32 * purpose_mod) as i32;
+                hull = return_min_and_value(*min, *max);
                 let hull_rarity = get_rarity_float(hull as f32, *min as f32, *max as f32);
                 if hull >= average {
                     greater_than_average = true;

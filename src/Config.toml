@@ -67,130 +67,128 @@ build_purposemod = 0.5
 mine_purposemod = 1.0
 auxiliary_purposemod= 1.8
 #wareprice
-min = [5000000,10000000]
-average = [10000000, 12000000]
-max = [12000000,15000000]
+min = [10000000,15000000]
+average = [15000000, 22000000]
+max = [22000000,35000000]
 #physics - min and max CANNOT be the same value
-mass= [549, 5049]
-i_pitch= [617, 618]
-i_yaw= [617, 618]
-i_roll= [493, 494]
-forward= [189, 190]
-reverse= [759, 760]
-horizontal= [259, 260]
-vertical= [259, 260]
+mass= [549, 1500]
+i_pitch= [400, 900]
+i_yaw= [400, 900]
+i_roll= [400, 900]
+forward= [400, 900]
+reverse= [400, 900]
+horizontal= [200, 500]
+vertical= [200, 500]
 d_pitch= [100, 810]
 d_yaw= [100, 810]
 d_roll= [100, 810]
 #stats
-explosion = [1, 5]
-ammo = [100, 1000]
-unit = [1, 5]
-hull = [40000, 150000]
+explosion = [500000, 1500000]
+ammo = [500, 5000]
+unit = [20, 80]
+hull = [80000, 250000]
 cargo = [12000, 50000]
-people = [10, 20]
+people = [200, 1000]
 #hanagar capacity [s,m]
 hangarcapacity = [10, 40 ,1, 10]
-# small = 10
-# medium = 10
 [l_config]
 #purpose
-trade_purposemod = 0.1
-fight_purposemod = 1.5
+trade_purposemod = 2.0
+fight_purposemod = 2.0
 build_purposemod = 0.5
-mine_purposemod = 1
-auxiliary_purposemod= 3.1
+mine_purposemod = 1.0
+auxiliary_purposemod= 1.8
 #wareprice
-min = [50000000,100000000]
-average = [100000000, 120000000]
-max = [120000000,150000000]
+min = [5000000,6000000]
+average = [6000000, 7000000]
+max = [7000000,10000000]
 #physics - min and max CANNOT be the same value
-mass= [549, 5049]
-i_pitch= [617, 618]
-i_yaw= [617, 618]
-i_roll= [493, 494]
-forward= [189, 190]
-reverse= [759, 760]
-horizontal= [259, 260]
-vertical= [259, 260]
-d_pitch= [100, 810]
-d_yaw= [100, 810]
-d_roll= [100, 810]
+mass= [200, 600]
+i_pitch= [100, 200]
+i_yaw= [100, 200]
+i_roll= [100, 200]
+forward= [100, 200]
+reverse= [100, 200]
+horizontal= [75, 200]
+vertical= [75, 200]
+d_pitch= [75, 300]
+d_yaw= [75, 300]
+d_roll= [75, 300]
 #stats
-explosion = [1, 5]
+explosion = [100000, 200000]
 ammo = [100, 1000]
-unit = [1, 5]
+unit = [10, 50]
 hull = [40000, 150000]
-cargo = [12000, 50000]
-people = [10, 20]
+cargo = [8000, 35000]
+people = [60, 200]
 #hanagar capacity [s,m]
-hangarcapacity = [10, 40 ,1, 10]
+hangarcapacity = [5, 20 ,1, 5]
 # small = 10
 # medium = 10
 [m_config]
 #purpose
-trade_purposemod = 0.1
-fight_purposemod = 1.5
+trade_purposemod = 2.0
+fight_purposemod = 2.0
 build_purposemod = 0.5
-mine_purposemod = 1
-auxiliary_purposemod= 3.1
+mine_purposemod = 1.0
+auxiliary_purposemod= 1.8
 #wareprice
-min = [50000000,100000000]
-average = [100000000, 120000000]
-max = [120000000,150000000]
+min = [1000000,1500000]
+average = [1500000, 2000000]
+max = [2000000,2500000]
 #physics - min and max CANNOT be the same value
-mass= [549, 5049]
-i_pitch= [617, 618]
-i_yaw= [617, 618]
-i_roll= [493, 494]
-forward= [189, 190]
-reverse= [759, 760]
-horizontal= [259, 260]
-vertical= [259, 260]
-d_pitch= [100, 810]
-d_yaw= [100, 810]
-d_roll= [100, 810]
+mass= [20, 50]
+i_pitch= [5, 9]
+i_yaw= [5, 9]
+i_roll= [5, 9]
+forward= [4, 10]
+reverse= [25, 35]
+horizontal= [10, 25]
+vertical= [10, 25]
+d_pitch= [5, 20]
+d_yaw= [5, 20]
+d_roll= [5, 20]
 #stats
-explosion = [1, 5]
-ammo = [100, 1000]
-unit = [1, 5]
-hull = [40000, 150000]
-cargo = [12000, 50000]
-people = [10, 20]
+explosion = [20000, 50000]
+ammo = [50, 200]
+unit = [5, 15]
+hull = [10000, 35000]
+cargo = [3000, 12000]
+people = [10, 50]
 #hanagar capacity [s,m]
-hangarcapacity = [10, 40 ,1, 10]
+hangarcapacity = [1, 5 ,1, 10]
 # small = 10
 # medium = 10
 [s_config]
 #purpose
-trade_purposemod = 0.1
-fight_purposemod = 1.5
+trade_purposemod = 2.0
+fight_purposemod = 2.0
 build_purposemod = 0.5
-mine_purposemod = 1
-auxiliary_purposemod= 3.1
+mine_purposemod = 1.0
+auxiliary_purposemod= 1.8
 #wareprice
-min = [50000000,100000000]
-average = [100000000, 120000000]
-max = [120000000,150000000]
+min = [200000,300000]
+average = [300000, 500000]
+max = [500000,600000]
 #physics - min and max CANNOT be the same value
-mass= [549, 5049]
-i_pitch= [617, 618]
-i_yaw= [617, 618]
-i_roll= [493, 494]
-forward= [189, 190]
-reverse= [759, 760]
-horizontal= [259, 260]
-vertical= [259, 260]
-d_pitch= [100, 810]
-d_yaw= [100, 810]
-d_roll= [100, 810]
+mass= [2, 12]
+i_pitch= [2, 4]
+i_yaw= [2, 4]
+i_roll= [2, 4]
+forward= [4, 8]
+reverse= [15, 30]
+horizontal= [2, 5]
+vertical= [2, 5]
+d_pitch= [2, 5]
+d_yaw= [2, 5]
+d_roll= [2, 5]
 #stats
-explosion = [1, 5]
-ammo = [100, 1000]
+explosion = [3000, 5000]
+ammo = [5, 30]
 unit = [1, 5]
-hull = [40000, 150000]
-cargo = [12000, 50000]
-people = [10, 20]
+hull = [3000, 10000]
+cargo = [200, 500]
+people = [1, 15]
 #hanagar capacity [s,m]
 hangarcapacity = [10, 40 ,1, 10]
 # small = 10
